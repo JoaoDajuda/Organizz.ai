@@ -25,4 +25,4 @@ def main():
         else:
             print('=-=-==-=-=-=')
             print('formato inválido ou opção inexistente, digite novamente')
-            print('=-=-=-==-=-')           
+            print('=-=-=-==-=-')
