@@ -8,8 +8,8 @@ from datetime import datetime
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Caminho para a pasta JSONs que está no mesmo nível da pasta back-end
 JSON_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "JSONs"))
-DADOS_PATH = os.path.join(JSON_DIR, "JSONs/dados.json")
-TAREFAS_PATH = os.path.join(JSON_DIR, "JSONs/tarefas.json")
+DADOS_PATH = os.path.join(JSON_DIR, "dados.json")
+TAREFAS_PATH = os.path.join(JSON_DIR, "tarefas.json")
 # Caminho para o banco de dados
 DB_PATH = os.path.join(BASE_DIR, "database", "banco.db")
 
