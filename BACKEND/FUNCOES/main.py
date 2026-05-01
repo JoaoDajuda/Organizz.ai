@@ -3,6 +3,7 @@ import json
 import os
 import time
 from datetime import datetime
+from menu import main
 
 # --- CONFIGURAÇÃO DE CAMINHOS ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -71,6 +72,11 @@ def sincronizar():
     """Lê os arquivos JSON, valida os dados e atualiza o Banco de Dados."""
     if not os.path.exists(DADOS_PATH) or not os.path.exists(TAREFAS_PATH):
         print(f"⚠️ [{time.strftime('%H:%M:%S')}] Aguardando criação dos arquivos JSON...")
+
+        with open(DADOS_PATH, "w", encoding="utf-8") as arquivo:
+            json.dump({}, arquivo)
+        with open(TAREFAS_PATH, "w", encoding="utf-8") as arquivo:
+            json.dump({}, arquivo)
         return
 
     conn, cursor = iniciar_banco()
@@ -131,9 +137,9 @@ if __name__ == "__main__":
     print("Pressione CTRL + C para encerrar.")
     print("-" * 50)
     
-    try:
-        while True:
-            sincronizar()
-            time.sleep(5) # Atualiza a cada 5 segundos
-    except KeyboardInterrupt:
-        print("\n👋 Serviço de sincronização encerrado.")
+    if not os.path.exists(DADOS_PATH) or not os.path.exists(TAREFAS_PATH):
+        sincronizar()
+        time.sleep(2) # Atualiza a cada 2 segundos
+    print("Sincronização conclúida")
+    main()
+    

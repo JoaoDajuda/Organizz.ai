@@ -1,4 +1,4 @@
-from funcoes.valor import dados
+from ORCAMENTO.valor import dados
 def versaldo():
     
     print("- - - - - - - - - - - - - -")

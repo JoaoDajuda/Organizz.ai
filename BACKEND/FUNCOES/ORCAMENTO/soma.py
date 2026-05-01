@@ -1,10 +1,10 @@
-from funcoes.valor import *
+from ORCAMENTO.valor import *
 
 def addvalor() :
     
     print()
     while True:
-        add = input('digite um valor para acrescentar("voltar" para retroceder): ')
+        add = input('digite um valor para acrescentar("voltar" para retroceder): ').lower
         if add == 'voltar':
             return 
         else:

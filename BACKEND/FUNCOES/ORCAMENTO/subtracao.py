@@ -1,7 +1,7 @@
-from funcoes.valor import *
+from ORCAMENTO.valor import *
 def subvalor() : 
     while True:
-        add = input('Digite um valor para subtrair("voltar" para retroceder): ')
+        add = input('Digite um valor para subtrair("voltar" para retroceder): ').lower
         if add == 'voltar':
             return 
         

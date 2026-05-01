@@ -1,6 +1,6 @@
-from funcoes.soma import addvalor
-from funcoes.subtracao import subvalor
-from funcoes.ver_saldo import versaldo
+from ORCAMENTO.soma import addvalor
+from ORCAMENTO.subtracao import subvalor
+from ORCAMENTO.ver_saldo import versaldo
 
 def main():
     while True:
