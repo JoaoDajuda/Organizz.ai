@@ -1,0 +1,19 @@
+# Pasta de dependências do Node (Vite)
+node_modules/
+dist/
+
+# Arquivos do Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+
+# Banco de dados SQLite (Importante para não travar o Git)
+*.db
+*.sqlite3
+
+# Arquivos de sistema e ambiente
+.env
+.DS_Store
+Thumbs.db
