@@ -1,102 +1,10 @@
-import json
-import os
+# Variável global para o saldo
+saldo = 0
+# LISTA ADICIONADA: Para capturar cada movimentação individual
+historico = [] 
 
-BASE_DIR = os.path.dirname(__file__)
-ARQUIVO = os.path.join(BASE_DIR, "JSONs", "dados.json")
-
-# Criar arquivo se não existir
-def iniciar_dados():
-    if not os.path.exists(ARQUIVO):
-        dados = {
-            "saldo": 0,
-            "entradas": [],
-            "saidas": []
-        }
-        salvar_dados(dados)
-
-def carregar_dados():
-    with open(ARQUIVO, "r") as f:
-        return json.load(f)
-
-def salvar_dados(dados):
-    with open(ARQUIVO, "w") as f:
-        json.dump(dados, f, indent=4)
-
-
-def subvalor():
-    print()
-    while True:
-        add = int(input())
-        if add == 999:
-            break
-        elif add == 998:
-            return
-        
-        dados = carregar_dados()
-        dados["saldo"] -= add
-        dados["saidas"].append(add)
-
-        salvar_dados(dados)
-
-        print("- - - - - - - - - - - - - -")
-        print(dados["saldo"])
-        print("- - - - - - - - - - - - - -")
-
-
-def addvalor():
-    print()
-    while True:
-        add = int(input())
-        if add == 999:
-            break
-        elif add == 998:
-            return
-        
-        dados = carregar_dados()
-        dados["saldo"] += add
-        dados["entradas"].append(add)
-
-        salvar_dados(dados)
-
-        print("- - - - - - - - - - - - - -")
-        print(dados["saldo"])
-        print("- - - - - - - - - - - - - -")
-
-
-def versaldo():
-    dados = carregar_dados()
-    print("- - - - - - - - - - - - - -")
-    print("Seu saldo é de:")
-    print(dados["saldo"])
-    print("- - - - - - - - - - - - - -")
-
-
-def main():
-    iniciar_dados()
-    
-
-while True:
-        print(f'Digite o que deseja realizar:')
-        print(f'1 - Adicionar saldo')
-        print(f'2 - Subtrair compra')
-
-        print(f'3 - ver saldo') 
-        print('=-=-=-=-=-=-=-')
-        choose = (' ')
-        choose = input('digite uma opção: ')
-        
-        if choose == '1':
-            addvalor()
-        elif choose == '2':
-            subvalor()
-        elif choose == '3' or choose == 'ver':
-            versaldo()
-        else:
-            print('=-=-==-=-=-=')
-            print('formato inválido, digite novamente')
-            print('=-=-=-==-=-')            
-
-def addvalor() : 
+def addvalor_v2(): 
+    global saldo, historico # Adicionado historico no global
     print()
     while True:
         add = str(input('digite um valor para acrescentar(sair ou voltar): '))   
@@ -107,47 +15,61 @@ def addvalor() :
         else:
             try:
                 add_value = int(add)
-                global saldo 
                 saldo += add_value
+                # ANOTAÇÃO: Salva o valor positivo na lista
+                historico.append(add_value) 
+                
                 print("- - - - - - - - - - - - - -")
-                print ('valor adicionado');
+                print('valor adicionado')
                 print("- - - - - - - - - - - - - -")
-
             except:
-                print('opção inválida, digite um valor válida')
+                print('opção inválida, digite um valor válido')
 
-def subvalor() : 
+def subvalor_v2(): 
+    global saldo, historico # Adicionado historico no global
     while True:
         print('Digite um valor para subtrair(sair ou voltar): ')
         add = input()
         if add == 'sair':
-            print('saindo...')
             break
         elif add == 'voltar':
             return 
         else:
             try:
                 add_value = int(add)
-                global saldo 
                 saldo -= add_value
+                # ANOTAÇÃO: Salva o valor negativo na lista para o banco saber que é saída
+                historico.append(-add_value) 
+                
                 print("- - - - - - - - - - - - - -")
-                print ('valor subtraido');
+                print('valor subtraído')
                 print("- - - - - - - - - - - - - -")
             except:  
-                print('opção inválida, digite um valor válida')
+                print('opção inválida, digite um valor válido')
 
-       
 def versaldo():
     global saldo
     print("- - - - - - - - - - - - - -")
     print(f"Seu saldo é de: {saldo}")
     print("- - - - - - - - - - - - - -")
-    
 
-def Funcionapf() :
-    main()
-    
-Funcionapf()
+def abrir_orcamento():
+    while True:
+        print(f'\n--- MENU ORÇAMENTO ---')
+        print(f'1 - Adicionar saldo')
+        print(f'2 - Subtrair compra')
+        print(f'3 - Ver saldo') 
+        print('0 - Voltar ao Menu Principal')
+        print('----------------------')
+        choose = input('digite uma opção: ')
         
-
-
+        if choose == '1':
+            addvalor_v2()
+        elif choose == '2':
+            subvalor_v2()
+        elif choose == '3' or choose == 'ver':
+            versaldo()
+        elif choose == '0':
+            break
+        else:
+            print('Formato inválido, tente novamente.')

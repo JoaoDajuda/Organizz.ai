@@ -1,28 +1,26 @@
-from ORCAMENTO.soma import addvalor
-from ORCAMENTO.subtracao import subvalor
-from ORCAMENTO.ver_saldo import versaldo
+from ORCAMENTO import orcamento
+from AGENDA import agendas
 
-def main():
+def menu_principal(salvar_fn):
     while True:
-        print('Digite o que deseja realizar:')
-        print('1 - "Adicionar" saldo')
-        print('2 - "Subtrair" compra')
-        print('3 - "ver" saldo') 
-        print('4 - "fechar" programa')
-        print('=-=-=-=-=-=-=-')
-        choose = (' ')
-        choose = input('digite uma opção: ').lower().strip()
+        print("\n============================")
+        print("      ORGANIZZ.AI      ")
+        print("============================")
+        print("1 - Ir para Orçamento")
+        print("2 - Ir para Agenda")
+        print("0 - Fechar Programa")
+        print("----------------------------")
         
-        if choose == '1' or choose == 'adicionar':
-            addvalor()
-        elif choose == '2' or choose == 'subtrair':
-            subvalor()
-        elif choose == '3' or choose == 'ver':
-            versaldo()
-        elif choose == '4' or choose == 'fechar':
-            print("finalizando programa...")
+        opcao = input("Selecione para onde deseja ir: ")
+
+        if opcao == "1":
+            orcamento.abrir_orcamento()
+            salvar_fn("financeiro") 
+        elif opcao == "2":
+            agendas.abrir_agenda()
+            salvar_fn("agenda")    
+        elif opcao == "0":
+            print("Finalizando sistema...")
             break
         else:
-            print('=-=-==-=-=-=')
-            print('formato inválido ou opção inexistente, digite novamente')
-            print('=-=-=-==-=-')
+            print("Opção incorreta.")

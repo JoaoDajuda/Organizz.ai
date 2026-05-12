@@ -1,145 +1,98 @@
 import sqlite3
-import json
-import os
-import time
-from datetime import datetime
-from menu import main
+import menu
+# Como o main.py já está dentro de FUNCOES, importamos direto as pastas filhas
+from ORCAMENTO import orcamento
+from AGENDA import agendas
 
-# --- CONFIGURAÇÃO DE CAMINHOS ---
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# Caminho para a pasta JSONs que está no mesmo nível da pasta back-end
-JSON_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "JSONs"))
-DADOS_PATH = os.path.join(JSON_DIR, "dados.json")
-TAREFAS_PATH = os.path.join(JSON_DIR, "tarefas.json")
-# Caminho para o banco de dados
-DB_PATH = os.path.join(BASE_DIR, "database", "banco.db")
+# Conecta ao banco de dados (o arquivo será criado na pasta FUNCOES)
+conexao = sqlite3.connect('OrganizzAi.db')
+cursor = conexao.cursor()
 
-def iniciar_banco():
-    """Cria as tabelas conforme o diagrama ER do TCC."""
-    if not os.path.exists(os.path.dirname(DB_PATH)):
-        os.makedirs(os.path.dirname(DB_PATH))
-    
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    
-    # Usuario (id, nome, senha, email)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Usuario (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT,
-            senha TEXT,
-            email TEXT UNIQUE
-        )
-    """)
-    
-    # RTreino (id, dia_treino, repeticoes, grupo_muscular, exercicio, N_Series)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS RTreino (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            dia_treino TEXT,
-            repeticoes INTEGER,
-            grupo_muscular TEXT,
-            exercicio TEXT,
-            N_Series INTEGER
-        )
-    """)
-    
-    # Agenda (id, tarefa, data)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Agenda (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            tarefa TEXT,
-            data TEXT
-        )
-    """)
-    
-    # Financeiro (id, Saldo)
-    cursor.execute("CREATE TABLE IF NOT EXISTS Financeiro (id INTEGER PRIMARY KEY, Saldo FLOAT)")
-    
-    # Transacoes (id, tipo, valor) - O extrato detalhado
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Transacoes (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            tipo TEXT,
-            valor FLOAT
-        )
-    """)
-    
-    conn.commit()
-    return conn, cursor
+sql_script = """
+PRAGMA foreign_keys = ON;
 
-def sincronizar():
-    """Lê os arquivos JSON, valida os dados e atualiza o Banco de Dados."""
-    if not os.path.exists(DADOS_PATH) or not os.path.exists(TAREFAS_PATH):
-        print(f"⚠️ [{time.strftime('%H:%M:%S')}] Aguardando criação dos arquivos JSON...")
+CREATE TABLE IF NOT EXISTS Usuario (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    senha TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE
+);
 
-        with open(DADOS_PATH, "w", encoding="utf-8") as arquivo:
-            json.dump({}, arquivo)
-        with open(TAREFAS_PATH, "w", encoding="utf-8") as arquivo:
-            json.dump({}, arquivo)
-        return
+CREATE TABLE IF NOT EXISTS Agenda (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_usuario INTEGER NOT NULL,
+    tarefa_titulo TEXT NOT NULL,
+    data_texto TEXT,
+    status TEXT CHECK(status IN ('pendente', 'concluido', 'em_andamento')),
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id) ON DELETE CASCADE
+);
 
-    conn, cursor = iniciar_banco()
+CREATE TABLE IF NOT EXISTS Financeiro (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_usuario INTEGER NOT NULL UNIQUE,
+    saldo REAL NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id) ON DELETE CASCADE
+);
 
+CREATE TABLE IF NOT EXISTS Transacoes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_usuario INTEGER NOT NULL,
+    tipo TEXT CHECK(tipo IN ('entrada', 'saida')),
+    valor REAL NOT NULL,
+    data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id) ON DELETE CASCADE
+);
+
+INSERT OR IGNORE INTO Usuario (id, nome, senha, email) 
+VALUES (1, 'Teste', '1234', 'teste@gmail.com');
+
+INSERT OR IGNORE INTO Financeiro (id_usuario, saldo) VALUES (1, 0.0);
+"""
+
+def salvar_no_banco(tipo_operacao):
     try:
-        # --- 1. SINCRONIZAR FINANCEIRO E TRANSAÇÕES ---
-        with open(DADOS_PATH, 'r', encoding='utf-8') as f:
-            dados_fin = json.load(f)
-        
-        # Atualiza Saldo Geral
-        cursor.execute("INSERT OR REPLACE INTO Financeiro (id, Saldo) VALUES (1, ?)", (dados_fin.get('saldo', 0),))
-
-        # Atualiza Transações (Entradas e Saídas)
-        cursor.execute("DELETE FROM Transacoes")
-        cursor.execute("DELETE FROM sqlite_sequence WHERE name='Transacoes'")
-        
-        for v in dados_fin.get('entradas', []):
-            cursor.execute("INSERT INTO Transacoes (tipo, valor) VALUES ('entrada', ?)", (v,))
-        for v in dados_fin.get('saidas', []):
-            cursor.execute("INSERT INTO Transacoes (tipo, valor) VALUES ('saida', ?)", (v,))
-
-        # --- 2. SINCRONIZAR AGENDA (Com filtro de data) ---
-        with open(TAREFAS_PATH, 'r', encoding='utf-8') as f:
-            tarefas_json = json.load(f)
-
-        cursor.execute("DELETE FROM Agenda")
-        cursor.execute("DELETE FROM sqlite_sequence WHERE name='Agenda'")
-        
-        hoje = datetime.now().date()
-
-        for info in tarefas_json.values():
-            titulo = info.get('Titulo')
-            data_str = info.get('Data') # Ex: "25 de April de 2026"
+        if tipo_operacao == "financeiro":
+            # Salva o saldo total atualizado
+            cursor.execute("UPDATE Financeiro SET saldo = ? WHERE id_usuario = ?", (orcamento.saldo, 1))
             
-            try:
-                # Converte a string do JSON de volta para data para conferir se já passou
-                # Usamos %B porque seu agendas.py salva o nome do mês por extenso
-                data_objeto = datetime.strptime(data_str, "%d de %B de %Y").date()
-                
-                if data_objeto >= hoje:
-                    cursor.execute("INSERT INTO Agenda (tarefa, data) VALUES (?, ?)", (titulo, data_str))
-            except:
-                # Se a data estiver em formato estranho ou antigo, ignoramos para não quebrar o banco
-                continue
+            # Registra cada item do histórico como uma transação nova
+            for valor in orcamento.historico:
+                tipo_mov = "entrada" if valor > 0 else "saida"
+                cursor.execute("INSERT INTO Transacoes (id_usuario, tipo, valor) VALUES (?, ?, ?)", 
+                               (1, tipo_mov, abs(valor)))
+                print(f"-> [BANCO] Registrada {tipo_mov} de {abs(valor)}")
+            
+            # Limpa o histórico para não duplicar na próxima vez que abrir o menu
+            orcamento.historico.clear()
+            
+        elif tipo_operacao == "agenda":
+            # ... (mantenha sua lógica da agenda igual)
+            if agendas.tarefas_memoria:
+                ultima_chave = list(agendas.tarefas_memoria.keys())[-1]
+                tarefa = agendas.tarefas_memoria[ultima_chave]
+                cursor.execute("INSERT INTO Agenda (id_usuario, tarefa_titulo, data_texto, status) VALUES (?, ?, ?, ?)", 
+                               (1, tarefa["Titulo"], tarefa["Data"], "pendente"))
+                agendas.tarefas_memoria.clear() 
 
-        conn.commit()
-        print(f"✅ [{time.strftime('%H:%M:%S')}] Banco Sincronizado e Datas Organizadas!")
-
+        conexao.commit()
+        
     except Exception as e:
-        print(f"❌ Erro na sincronização: {e}")
-        conn.rollback()
-    finally:
-        conn.close()
+        print(f"-> [ERRO SQLITE] {e}")    # AQUI NÃO VAI FINALLY COM CLOSE!
 
-if __name__ == "__main__":
-    print("🚀 SERVIÇO DE SINCRONIZAÇÃO INICIADO")
-    print("Monitorando alterações em 'dados.json' e 'tarefas.json'...")
-    print("Pressione CTRL + C para encerrar.")
-    print("-" * 50)
+# --- O CORAÇÃO DO PROGRAMA ---
+try:
+    cursor.executescript(sql_script)
+    conexao.commit()
+    print("Banco de dados pronto!")
     
-    if not os.path.exists(DADOS_PATH) or not os.path.exists(TAREFAS_PATH):
-        sincronizar()
-        time.sleep(2) # Atualiza a cada 2 segundos
-    print("Sincronização conclúida")
-    main()
-    
+    # O menu roda aqui dentro. Ele só sai daqui quando você digita '0' no menu principal
+    menu.menu_principal(salvar_no_banco)
+
+except Exception as e:
+    print(f"Erro fatal: {e}")
+
+finally:
+    # ESTE é o único finally que deve ter o close.
+    # Ele só roda quando o menu_principal termina (quando o usuário fecha o programa)
+    conexao.close()
+    print("Conexão encerrada. Até logo!")
