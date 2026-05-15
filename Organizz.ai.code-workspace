@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "Organizz.ai",
+			"path": "."
+		},
+		{
+			"name": "FRONTEND",
+			"path": "../FRONTEND"
+		}
+	],
+	"settings": {}
+}
