@@ -1,8 +1,11 @@
 from fastapi import FastAPI
+from pydantic import BaseModel, Field
 
 from ..ORCAMENTO.subtracao import subvalor
 
 from ..ORCAMENTO.soma import addvalor
+
+from .registerRoute import Loginrequest, Autenticar
 
 app = FastAPI()
 
@@ -26,4 +29,9 @@ async def versaldo(id: int, senha: str):
 
 @app.get("/")
 async def root():
-    return {"message": "JJPZ"}
+    return {"message": "HOME"}
+
+@app.post("/Login")
+async def Autenticador(credenciais: Loginrequest):
+    resultado = await Autenticar(credenciais)
+    return resultado
