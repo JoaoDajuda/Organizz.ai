@@ -1,0 +1,27 @@
+.PaginaFinancas {
+    min-height: 100vh;
+    background-color: #1C1717;
+}
+
+.Header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    padding: 10px;
+}
+
+.ItensHeader {
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    flex-direction: row;
+    list-style: none;
+    font-size: larger;
+    gap: 24px;
+    margin-left: 5%;
+}
+
+.logo {
+    width: 150px;
+    height: 150px;
+}
