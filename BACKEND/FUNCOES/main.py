@@ -1,7 +1,7 @@
 import sqlite3
 import menu
 # Como o main.py já está dentro de FUNCOES, importamos direto as pastas filhas
-from ORCAMENTO import orcamento
+from FUNCOES_ORCAMENTO import orcamento
 from AGENDA import agendas
 
 # Conecta ao banco de dados (o arquivo será criado na pasta FUNCOES)

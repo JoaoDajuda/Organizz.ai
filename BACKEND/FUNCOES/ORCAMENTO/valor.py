@@ -1,2 +1,0 @@
-
-dados = {'saldo': 0 }
