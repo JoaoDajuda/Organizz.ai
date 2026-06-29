@@ -61,7 +61,7 @@ def salvar_no_banco(tipo_operacao):
                 cursor.execute("INSERT INTO Transacoes (id_usuario, tipo, valor) VALUES (?, ?, ?)", 
                                (1, tipo_mov, abs(valor)))
                 print(f"-> [BANCO] Registrada {tipo_mov} de {abs(valor)}")
-            
+            #add commit
             # Limpa o histórico para não duplicar na próxima vez que abrir o menu
             orcamento.historico.clear()
             

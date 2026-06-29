@@ -1,7 +1,4 @@
-from ORCAMENTO.valor import dados
-def versaldo():
-    
-    print("- - - - - - - - - - - - - -")
-    print(f"Seu saldo é de: {dados["saldo"]}R$")
-    print("- - - - - - - - - - - - - -")
-    
+from .valor import dados
+
+def versaldo(id, senha):
+    return (saldodisponivel)

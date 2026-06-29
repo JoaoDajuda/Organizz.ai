@@ -1,7 +1,6 @@
 # Pasta de dependências do Node (Vite)
-node_modules/
 dist/
-
+node_modules/
 # Arquivos do Python
 __pycache__/
 *.py[cod]

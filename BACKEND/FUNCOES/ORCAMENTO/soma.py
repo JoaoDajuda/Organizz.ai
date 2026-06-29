@@ -1,23 +1,13 @@
-from ORCAMENTO.valor import *
+from .valor import *
 
-def addvalor() :
-    
-    print()
-    while True:
-        add = input('digite um valor para acrescentar("voltar" para retroceder): ').lower
-        if add == 'voltar':
-            return 
-        else:
-            try:
-                add_value = float(add)
-                if add_value <= 0:
-                    print('digite um valor válido')
-
-                else:
-                    dados["saldo"] += add_value
-                    print("- - - - - - - - - - - - - -")
-                    print (f'valor {add}R$ adicionado')
-                    print("- - - - - - - - - - - - - -")
-
-            except:
-                print('opção inválida ou inexistente, digite um valor válido')
+def addvalor(valor):
+    try:
+        #somar o valor passado em body no banco
+        add_valor = float(valor)
+        if add_valor < 0:
+            raise ValueError("O valor adicionado não pode ser negativo.")
+        dados["saldo"] += add_valor
+        return ({"message": f"Valor {add_valor} adicionado."})
+        return (add_valor)
+    except:
+        return ({"message": "Erro na função adicionar valor."})
