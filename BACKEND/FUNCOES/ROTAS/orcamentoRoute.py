@@ -5,7 +5,7 @@ from ..ORCAMENTO.subtracao import subvalor
 
 from ..ORCAMENTO.soma import addvalor
 
-from .registerRoute import Loginrequest, Autenticar
+from .validationRoute import Loginrequest, Autenticar
 
 app = FastAPI()
 
@@ -31,7 +31,7 @@ async def versaldo(id: int, senha: str):
 async def root():
     return {"message": "HOME"}
 
-@app.post("/Login")
+@app.post("/versaldo")
 async def Autenticador(credenciais: Loginrequest):
     resultado = await Autenticar(credenciais)
     return resultado
