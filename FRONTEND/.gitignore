@@ -1,13 +1,27 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-# dependencies
+# Pasta de dependências do Node (Vite)
+dist/
 node_modules/
+# Arquivos do Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
 
 # Expo
 .expo/
 dist/
 web-build/
 expo-env.d.ts
+
+# Banco de dados SQLite (Importante para não travar o Git)
+*.db
+*.sqlite3
+
+# Arquivos de sistema e ambiente
+.env
+.DS_Store
+Thumbs.db
 
 # Native
 .kotlin/
@@ -18,7 +32,7 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 
-# Metro
+Metro
 .metro-health-check*
 
 # debug
