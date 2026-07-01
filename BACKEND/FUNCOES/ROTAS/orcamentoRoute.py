@@ -22,10 +22,10 @@ async def subtrair(valor: float):
     resultado = subvalor(valor)
     return resultado
 
-@app.get("/saldo")
-async def versaldo(id: int, senha: str):
-    saldo = versaldo(id, senha)
-    return saldo
+# @app.get("/saldo")
+# async def versaldo(id: int, senha: str):
+#     saldo = versaldo(id, senha)
+#     return saldo
 
 @app.get("/")
 async def root():
