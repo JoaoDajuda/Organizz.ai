@@ -59,7 +59,7 @@ def salvar_no_banco(tipo_operacao):
             for valor in orcamento.historico:
                 tipo_mov = "entrada" if valor > 0 else "saida"
                 cursor.execute("INSERT INTO Transacoes (id_usuario, tipo, valor) VALUES (?, ?, ?)", 
-                               (1, tipo_mov, abs(valor)))
+                                (1, tipo_mov, abs(valor)))
                 print(f"-> [BANCO] Registrada {tipo_mov} de {abs(valor)}")
             #add commit
             # Limpa o histórico para não duplicar na próxima vez que abrir o menu
@@ -71,7 +71,7 @@ def salvar_no_banco(tipo_operacao):
                 ultima_chave = list(agendas.tarefas_memoria.keys())[-1]
                 tarefa = agendas.tarefas_memoria[ultima_chave]
                 cursor.execute("INSERT INTO Agenda (id_usuario, tarefa_titulo, data_texto, status) VALUES (?, ?, ?, ?)", 
-                               (1, tarefa["Titulo"], tarefa["Data"], "pendente"))
+                            (1, tarefa["Titulo"], tarefa["Data"], "pendente"))
                 agendas.tarefas_memoria.clear() 
 
         conexao.commit()
