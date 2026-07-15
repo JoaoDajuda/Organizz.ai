@@ -1,0 +1,8 @@
+{
+    "name": "organizz-frontend",
+    "private": true,
+    "workspaces": [
+        "web",
+        "mobile"
+    ]
+}
