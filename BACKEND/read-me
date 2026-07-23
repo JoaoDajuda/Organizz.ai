@@ -1,0 +1,6 @@
+necessário as bibliotecas:
+
+sqlalchemy
+sqlalchemy.orm
+fastapi
+uvicorn
