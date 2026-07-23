@@ -9,7 +9,7 @@ db = create_engine("sqlite://banco.db")
 Base = declarative_base()
 
 #criar classes e tabelas no banco
-class Usuario(base):
+class Usuario(Base):
     __tablename__  = "usuarios"
 
     id = Column("id", Integer, nullable= False, primary_key=True, autoincrement=True)
@@ -19,4 +19,9 @@ class Usuario(base):
     ativo = Column("ativo", String)
     admin = Column("admin", Boolean, default=False)
 
-class Valores
+class Valores(Base):
+    __table_name__ = "movimentações"
+
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
+    valor = Column("movimentação", Float)
+    usuario = Column("usuario", ForeignKey("usuarios.id"))

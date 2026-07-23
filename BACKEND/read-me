@@ -4,3 +4,5 @@ sqlalchemy
 sqlalchemy.orm
 fastapi
 uvicorn
+passlib
+dotenv
