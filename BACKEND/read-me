@@ -6,3 +6,15 @@ fastapi
 uvicorn
 passlib
 dotenv
+alembic
+
+#para rodar o código: uvicorn main:app --reload
+
+#para iniciar o banco
+#alembic init alembic
+
+#iniciar migração
+#alembic revision --autogenerate -m "mensagem de mudança"
+
+#executar a mudança:
+#alembic upgrade head

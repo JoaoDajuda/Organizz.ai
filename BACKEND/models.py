@@ -5,7 +5,7 @@ from sqlalchemy.orm import declarative_base
 
 #cria a conexão com o banco
 
-db = create_engine("sqlite://banco.db")
+db = create_engine("sqlite:///banco.db")
 Base = declarative_base()
 
 #criar classes e tabelas no banco
@@ -19,9 +19,21 @@ class Usuario(Base):
     ativo = Column("ativo", String)
     admin = Column("admin", Boolean, default=False)
 
+    def __init__(self, nome, email, senha, ativo=True, admin=False):
+        self.nome=nome
+        self.email=email
+        self.senha=senha
+        self.ativo=ativo
+        self.admmin=admin         
+
 class Valores(Base):
-    __table_name__ = "movimentações"
+    __tablename__ = "movimentações"
 
     id = Column("id", Integer, primary_key=True, autoincrement=True)
     valor = Column("movimentação", Float)
     usuario = Column("usuario", ForeignKey("usuarios.id"))
+
+    def __init__(self, id, valor, usuario):
+        self.id=id
+        self.valor=valor
+        self.usuario=usuario
