@@ -33,7 +33,7 @@ class Valores(Base):
     valor = Column("movimentação", Float)
     usuario = Column("usuario", ForeignKey("usuarios.id"))
 
-    def __init__(self, id, valor, usuario):
-        self.id=id
+    def __init__(self, valor, usuario):
+
         self.valor=valor
         self.usuario=usuario
