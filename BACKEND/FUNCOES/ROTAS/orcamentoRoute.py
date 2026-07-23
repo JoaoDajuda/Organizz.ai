@@ -9,21 +9,28 @@ from .registerRoute import Loginrequest, Autenticar
 
 app = FastAPI()
 
-# rota para somar valores e enviar ao banco
+
 @app.get("/soma/{valor}")
 async def somar(valor: float):
+    """ 
+    rota para somar valores e enviar ao banco
+    """
     resultado = addvalor_v2(valor)
     return resultado
 
-
-# rota para subtrair valores e enviar ao banco
 @app.get("/subtracao/{valor}")
 async def subtrair(valor: float):
+    """
+    rota para subtrair valores e enviar ao banco
+    """
     resultado = subvalor_v2(valor)
     return resultado
 
 @app.get("/saldo")
 async def versaldo(id: int, senha: str):
+    """
+    visualizar saldo
+    """
     saldo = versaldo(id, senha)
     return saldo
 
@@ -31,7 +38,8 @@ async def versaldo(id: int, senha: str):
 async def test():
     return {"message": "HOME"}
 
-@app.post("/versaldo")
+@app.post("validador")
 async def Autenticador(credenciais: Loginrequest):
+    """validador provisório(será substtituido em breve)"""
     resultado = await Autenticar(credenciais)
     return resultado
