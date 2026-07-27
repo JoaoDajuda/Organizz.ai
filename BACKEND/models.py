@@ -1,7 +1,8 @@
 #criação do modelo de banco de dados
 
-from sqlalchemy import create_engine, Column, String, Integer, Boolean, Float, ForeignKey
+from sqlalchemy import create_engine, Column, String, Integer, Boolean, Float, ForeignKey, DateTime, func
 from sqlalchemy.orm import declarative_base
+
 
 #cria a conexão com o banco
 
@@ -32,6 +33,7 @@ class Valores(Base):
     id = Column("id", Integer, primary_key=True, autoincrement=True)
     valor = Column("movimentação", Float)
     usuario = Column("usuario", ForeignKey("usuarios.id"))
+    data_movimentacao = Column(DateTime(timezone=True), default=func.now())
 
     def __init__(self, valor, usuario):
 
