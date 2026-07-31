@@ -32,16 +32,18 @@
 }
 
 .ContainerFormulario {
+    width: 400px;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 12px;
-    
 }
 
 .logo {
-    width: 300px;
-    height: 200px;
+    width: 400px;
+    height: 350px;
     object-fit: contain;
     margin-bottom: 8px;
 }
@@ -66,6 +68,22 @@
     box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
 }
 
+.areaLogin {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 60%;
+}
+
+.cadastrarSenha {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 5px;
+}
+
 .esqueceu {
     color: #fff;
     font-size: 14px;
@@ -77,9 +95,28 @@
     text-decoration: none;
     opacity: 0.85;
     transition: opacity 0.2s;
+    white-space: nowrap;
 }
 
 .esqueceu:hover {
+    opacity: 1;
+}
+
+.cadastro {
+    color: #fff;
+    font-size: 14px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    align-self: flex-start;
+    padding: 0;
+    text-decoration: none;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+}
+
+.cadastro:hover {
     opacity: 1;
 }
 
