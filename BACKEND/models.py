@@ -39,3 +39,17 @@ class Valores(Base):
 
         self.valor=valor
         self.usuario=usuario
+
+class Atividades(Base):
+    __tablename__ = "atividades"
+
+    id = Column("id", Integer, primary_key= True, autoincrement=True)
+    atividade = Column("atividade", String)
+    usuario = Column("usuario", ForeignKey("usuarios.id"))
+    concluido = Column("conclusao", DateTime)
+    data_criacao = Column(DateTime(timezone=True), default=func.now())
+
+    def __init__(self, valor, usuario):
+
+        self.valor=valor
+        self.valor=usuario

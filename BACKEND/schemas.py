@@ -29,4 +29,10 @@ class EntradaSchema(BaseModel):
 
     class Config:
         from_attributes = True
-    
+
+class RotinaSchema(BaseModel):
+    id_usuario: int
+    rotina: str
+
+    class Config:
+        from_attributes = True
