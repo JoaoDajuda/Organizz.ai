@@ -68,7 +68,7 @@
     box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
 }
 
-.areaLogin {
+.criarConta {
     display: flex;
     flex-direction: row;
     align-items: center;

@@ -1,10 +1,8 @@
 #criação do modelo de banco de dados
-
 from sqlalchemy import create_engine, Column, String, Integer, Boolean, Float, ForeignKey
 from sqlalchemy.orm import declarative_base
 
 #cria a conexão com o banco
-
 db = create_engine("sqlite:///banco.db")
 Base = declarative_base()
 
