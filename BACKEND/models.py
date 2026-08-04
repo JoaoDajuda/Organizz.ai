@@ -1,6 +1,12 @@
 #criação do modelo de banco de dados
+<<<<<<< HEAD
 from sqlalchemy import create_engine, Column, String, Integer, Boolean, Float, ForeignKey
+=======
+
+from sqlalchemy import create_engine, Column, String, Integer, Boolean, Float, ForeignKey, DateTime, func
+>>>>>>> 6178286c798e6a47495d16d9da1a9547ac4ae63c
 from sqlalchemy.orm import declarative_base
+
 
 #cria a conexão com o banco
 db = create_engine("sqlite:///banco.db")
@@ -30,8 +36,23 @@ class Valores(Base):
     id = Column("id", Integer, primary_key=True, autoincrement=True)
     valor = Column("movimentação", Float)
     usuario = Column("usuario", ForeignKey("usuarios.id"))
+    data_movimentacao = Column(DateTime(timezone=True), default=func.now())
 
     def __init__(self, valor, usuario):
 
         self.valor=valor
         self.usuario=usuario
+
+class Atividades(Base):
+    __tablename__ = "atividades"
+
+    id = Column("id", Integer, primary_key= True, autoincrement=True)
+    atividade = Column("atividade", String)
+    usuario = Column("usuario", ForeignKey("usuarios.id"))
+    concluido = Column("conclusao", DateTime)
+    data_criacao = Column(DateTime(timezone=True), default=func.now())
+
+    def __init__(self, valor, usuario):
+
+        self.valor=valor
+        self.valor=usuario
