@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./Login.css"
 import Modal from "../../components/modal.jsx";
+import criar_conta from "../../../../../BACKEND/auth_routes.py"
 import api from "../../API/api.js";
 
 export default function Login() {
@@ -69,7 +70,7 @@ export default function Login() {
                                 </div>
                             </Modal>
                             <p className="cadastro" onClick={() => {
-                                    FazerLogin(api.post("/criar_conta", {nome, email, senha}));
+                                    FazerLogin(api.post(criar_conta(), {nome, email, senha}));
                                     setOpenModalCadastro(true)}
                                 }>
                                 Cadastre-se
