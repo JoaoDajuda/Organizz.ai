@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "./Login.css"
 import Modal from "../../components/modal.jsx";
-import criar_conta from "../../../../../BACKEND/auth_routes.py"
-import api from "../../API/api.js";
+// import criar_conta from "../../../../../BACKEND/auth_routes.py"
+import { CadastrarUsuario } from "../../services/api.js";
 
 export default function Login() {
     const [nome, setNome] = useState(""); //Cadastro
@@ -14,9 +14,15 @@ export default function Login() {
     const [openModalCadastro, setOpenModalCadastro] = useState(false);
     const [openModalEsqueceuSenha, setOpenModalEsqueceuSenha] = useState(false);
 
-    const FazerLogin = () => {
-        api.post("/criar_conta", { email, senha})
-    };
+    const FazerCadastro = async () => {
+        try {
+            const response = await CadastrarUsuario(nome, criarEmail, criarSenha);
+            console.log("Usuário cadastrado com sucesso:", response);
+            setOpenModalCadastro(false);
+        } catch (error) {
+            console.error("Erro ao cadastrar usuário:", error);
+        }
+    }
 
     return (
         <>
@@ -70,7 +76,6 @@ export default function Login() {
                                 </div>
                             </Modal>
                             <p className="cadastro" onClick={() => {
-                                    FazerLogin(api.post(criar_conta(), {nome, email, senha}));
                                     setOpenModalCadastro(true)}
                                 }>
                                 Cadastre-se
@@ -83,13 +88,7 @@ export default function Login() {
                                     <input className="Input" type="password" placeholder="Confirme sua senha:" value={novaSenha} onChange={(e) => setNovaSenha(e.target.value)} />
                                 </div>
                                 <div className="areaLogin">
-                                    <button className="BotaoLogin" onClick={() => {
-                                        console.log("Nome:", nome); //RETIRAR DEPOIS
-                                        console.log("Email:", criarEmail); //RETIRAR DEPOIS
-                                        console.log("Senha:", criarSenha); //RETIRAR DEPOIS
-                                        console.log("Nova Senha:", novaSenha); //RETIRAR DEPOIS
-                                        setOpenModalCadastro(false)
-                                    }}>
+                                    <button className="BotaoLogin" onClick={FazerCadastro}>
                                         Cadastrar
                                     </button>
                                 </div>

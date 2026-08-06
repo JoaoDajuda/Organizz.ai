@@ -1,10 +1,6 @@
 #criação do modelo de banco de dados
-<<<<<<< HEAD
-from sqlalchemy import create_engine, Column, String, Integer, Boolean, Float, ForeignKey
-=======
 
 from sqlalchemy import create_engine, Column, String, Integer, Boolean, Float, ForeignKey, DateTime, func
->>>>>>> 6178286c798e6a47495d16d9da1a9547ac4ae63c
 from sqlalchemy.orm import declarative_base
 
 
