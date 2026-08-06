@@ -16,7 +16,7 @@ class Usuario(Base):
     nome = Column("nome", String)
     email = Column("email", String, nullable=False)
     senha = Column("senha", String)
-    ativo = Column("ativo", String)
+    ativo = Column("ativo", Boolean, default=True)
     admin = Column("admin", Boolean, default=False)
 
     def __init__(self, nome, email, senha, ativo=True, admin=False):
@@ -24,7 +24,7 @@ class Usuario(Base):
         self.email=email
         self.senha=senha
         self.ativo=ativo
-        self.admmin=admin         
+        self.admin=admin         
 
 class Valores(Base):
     __tablename__ = "movimentações"

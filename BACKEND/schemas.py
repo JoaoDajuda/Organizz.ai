@@ -9,7 +9,7 @@ class UsuarioSchemas(BaseModel):
     ativo: Optional[bool]
     admin: Optional[bool]
 
-    class config:
+    class Config:
         from_attributes = True
 
 
