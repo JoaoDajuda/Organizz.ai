@@ -6,6 +6,10 @@ from sqlalchemy.orm import Session
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
+def criar_token(id_usuario):
+    token = f";plkoy54e3r{id_usuario}"
+    return token
+
 @auth_router.post("/criar_conta")
 async def criar_conta(usuarioschemas: UsuarioSchemas, session: Session = Depends(pegar_sessao)):
     """essa rota é responsavel pela criação de usuário e comparação de email no banco de dados"""
@@ -18,3 +22,20 @@ async def criar_conta(usuarioschemas: UsuarioSchemas, session: Session = Depends
         session.add(novo_usuario)
         session.commit() 
         return{"mensagem":"email cadastrado com sucesso!"}
+
+@auth_router.post("/fazer_login")
+async def login(loginSchema: LoginSchemas, session: Session= Depends(pegar_sessao)):
+
+    """essa rota é resposável por permitir a verificação e login do Usuário"""
+
+    usuario = session.query(Usuario).filter(Usuario.email == UsuarioSchemas.email).first()
+    if not usuario:
+        raise HTTPException(status_code=400, detail="email não econtrado.. tente novamente")
+
+    else:
+        acess_token = criar_token(Usuario.id)
+        return{
+            "acess_token" : acess_token;
+            "type_token" : "Bearer"
+        }
+        

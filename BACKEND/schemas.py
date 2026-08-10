@@ -26,7 +26,6 @@ class EntradaSchema(BaseModel):
     id_usuario: int
     valor: float
 
-
     class Config:
         from_attributes = True
 
