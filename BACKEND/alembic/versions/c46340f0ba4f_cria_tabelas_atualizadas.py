@@ -1,8 +1,8 @@
-"""ARTEMIS
+"""cria tabelas atualizadas
 
-Revision ID: 60b18f2ff33e
+Revision ID: c46340f0ba4f
 Revises: 
-Create Date: 2026-08-03 22:28:52.144258
+Create Date: 2026-08-06 23:33:55.012974
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 import sqlmodel
 
 # revision identifiers, used by Alembic.
-revision: str = '60b18f2ff33e'
+revision: str = 'c46340f0ba4f'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,7 +26,9 @@ def upgrade() -> None:
     sa.Column('nome', sqlmodel.sql.sqltypes.AutoString(length=150), nullable=False),
     sa.Column('senha', sqlmodel.sql.sqltypes.AutoString(length=30), nullable=False),
     sa.Column('email', sqlmodel.sql.sqltypes.AutoString(length=200), nullable=False),
-    sa.Column('emailrec', sqlmodel.sql.sqltypes.AutoString(length=200), nullable=False),
+    sa.Column('emailrec', sqlmodel.sql.sqltypes.AutoString(length=200), nullable=True),
+    sa.Column('ativo', sa.Boolean(), nullable=False),
+    sa.Column('admin', sa.Boolean(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('deleted_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id_usuario')

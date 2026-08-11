@@ -9,6 +9,7 @@ math_router = APIRouter(prefix="/contas", tags=["contas"])
 add_router = APIRouter(prefix="/soma", tags=["contas"])
 sub_router = APIRouter(prefix="/subtracao", tags=["contas"])
 
+
 @math_router.post("/adicao")
 async def criar_input(entradaschema: EntradaSchema, session: Session = Depends(pegar_sessao)):
     """essa rota é reponsavel por criar o acesso as entradas de valores do usuário no banco de dados"""
@@ -20,7 +21,17 @@ async def criar_input(entradaschema: EntradaSchema, session: Session = Depends(p
         )
         session.add(novo_input)
         session.commit()
-        return {"mensagem": "entrada registrada com sucesso!"}
+        session.refresh(financeiro)
+
+    nova_transacao = Transacao(
+        id_usuario=entradaschema.id_usuario,
+        id_financeiro=financeiro.id_financeiro,
+        valor=entradaschema.valor,
+        tipo=entradaschema.tipo,
+    )
+
+    if entradaschema.tipo == TipoTransacao.entrada:
+        financeiro.saldo += entradaschema.valor
     else:
         return{"mensagem":{"id não cadastrado, tente novamente"}}
 
