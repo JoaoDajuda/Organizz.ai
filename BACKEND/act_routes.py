@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import update
 from dependencies import pegar_sessao
 from schemas import RotinaSchema
+from passlib.context import CryptContext
 
 act_router = APIRouter(prefix="/acoes", tags= ["acoes"])
 

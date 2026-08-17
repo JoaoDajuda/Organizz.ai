@@ -7,6 +7,7 @@ uvicorn
 passlib
 dotenv
 alembic
+pip install bcrypt==4.3.0
 
 #para rodar o código: uvicorn main:app --reload
 
