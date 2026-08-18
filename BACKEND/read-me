@@ -1,14 +1,18 @@
-necessário as bibliotecas:
+#necessário as bibliotecas:
 
 sqlalchemy
 sqlalchemy.orm
 fastapi
 uvicorn
-passlib
+passlib[bcrypt]
 dotenv
 alembic
 pip install bcrypt==4.3.0
-jose
+python-jose[criptograpy]
+
+#pra instalar é so rodar no terminal:
+
+pip install sqlalchemy sqlalchemy.orm fastapi uvicorn passlib dotenv alembic bcrypt==4.3.0 jose[cryptogray]
 
 #para rodar o código: uvicorn main:app --reload
 

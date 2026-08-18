@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from passlib.context import CryptContext
+from fastapi.security import OAuth2PasswordBearer
 from dotenv import load_dotenv
 import os
 
@@ -13,6 +14,7 @@ TIMER = int(os.getenv("TIMER"))
 app = FastAPI()
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated=["auto"])
+oauth2_schema = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 from auth_routes import auth_router
 from math_routes import math_router, add_router, sub_router
