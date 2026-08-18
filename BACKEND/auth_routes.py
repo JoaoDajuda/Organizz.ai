@@ -1,15 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException
+from main import bcrypt_context, ALGORITHM, TIMER, SECRET_KEY
 from schemas import UsuarioSchemas, LoginSchemas
+from datetime import datetime,timedelta,timezone
 from dependencies import pegar_sessao
+from jose import jwt,JWTError
 from sqlalchemy.orm import Session
-from main import bcrypt_context
 from models import Usuario
 
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
-def criar_token(id_usuario):
-    token = f";plkoy54e3r{id_usuario}"
+def criar_token(id_usuario, duracao_token=timedelta(minutes=TIMER)):
+    expira = datetime.now(timezone.utc) + duracao_token
+    dict_info = {"sub": str(id_usuario),"exp": int(expira.timestamp())}
+    token = jwt.encode(dict_info, SECRET_KEY, ALGORITHM)
     return token
 
 def autenticar_usuario(email, senha, session,):
@@ -43,9 +47,11 @@ async def login(loginSchema: LoginSchemas, session: Session= Depends(pegar_sessa
         raise HTTPException(status_code=400, detail="Credenciais inválidas... tente novamente")
 
     else:
-        acess_token = criar_token(Usuario.id)
+        acess_token = criar_token(usuario.id)
+        refresh_token = criar_token(usuario.id, duracao_token = timedelta(days=7))
         return{
             "acess_token" : acess_token,
+            "refresh_token" : refresh_token,
             "type_token" : "Bearer"
         }
     
