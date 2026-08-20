@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from main import bcrypt_context, ALGORITHM, TIMER, SECRET_KEY
 from schemas import UsuarioSchemas, LoginSchemas
 from datetime import datetime,timedelta,timezone
-from dependencies import pegar_sessao
+from dependencies import pegar_sessao, verificar_token
 from jose import jwt,JWTError
 from sqlalchemy.orm import Session
 from models import Usuario
