@@ -6,6 +6,7 @@ from dependencies import pegar_sessao, verificar_token
 from jose import jwt,JWTError
 from sqlalchemy.orm import Session
 from models import Usuario
+from fastapi.security import OAuth2PasswordRequestForm
 
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
@@ -43,6 +44,24 @@ async def login(loginSchema: LoginSchemas, session: Session= Depends(pegar_sessa
     """essa rota é resposável por permitir a verificação e login do Usuário"""
 
     usuario = autenticar_usuario(loginSchema.email, loginSchema.senha, session)
+    if not usuario:
+        raise HTTPException(status_code=400, detail="Credenciais inválidas... tente novamente")
+
+    else:
+        acess_token = criar_token(usuario.id)
+        refresh_token = criar_token(usuario.id, duracao_token = timedelta(days=7))
+        return{
+            "acess_token" : acess_token,
+            "refresh_token" : refresh_token,
+            "type_token" : "Bearer"
+        }
+
+@auth_router.post("/login_form")
+async def login_form(dados_formulario: OAuth2PasswordRequestForm = Depends(), session: Session= Depends(pegar_sessao)):
+
+    """essa rota é resposável por permitir a verificação e login do Usuário na documentação da API"""
+
+    usuario = autenticar_usuario(dados_formulario.username, dados_formulario.password, session)
     if not usuario:
         raise HTTPException(status_code=400, detail="Credenciais inválidas... tente novamente")
 

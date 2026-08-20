@@ -12,7 +12,7 @@ python-jose[criptograpy]
 
 #pra instalar é so rodar no terminal:
 
-pip install sqlalchemy sqlalchemy.orm fastapi uvicorn passlib dotenv alembic bcrypt==4.3.0 jose[cryptogray]
+pip install sqlalchemy sqlalchemy.orm fastapi uvicorn passlib dotenv alembic bcrypt==4.3.0 python-jose[cryptography]
 
 #para rodar o código: uvicorn main:app --reload
 
