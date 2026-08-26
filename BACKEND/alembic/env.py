@@ -1,7 +1,6 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 
@@ -23,8 +22,15 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from models import Base
-target_metadata = Base.metadata
+from sqlmodel import SQLModel
+import models  # Importa para que as tabelas sejam lidas
+from database import DATABASE_URL
+
+target_metadata = SQLModel.metadata
+
+# Garante que o Alembic sempre usa a mesma URL de conexão do backend,
+# em vez de depender de uma cópia duplicada no alembic.ini
+config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

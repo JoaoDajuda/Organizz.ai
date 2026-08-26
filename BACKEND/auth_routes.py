@@ -4,7 +4,10 @@ from schemas import UsuarioSchemas, LoginSchemas
 from datetime import datetime,timedelta,timezone
 from dependencies import pegar_sessao, verificar_token
 from jose import jwt,JWTError
-from sqlalchemy.orm import Session
+# from sqlalchemy.orm import Session
+from sqlmodel import Session, select
+
+
 from models import Usuario
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -28,12 +31,15 @@ def autenticar_usuario(email, senha, session,):
 @auth_router.post("/criar_conta")
 async def criar_conta(usuarioschemas: UsuarioSchemas, session: Session = Depends(pegar_sessao)):
     """essa rota é responsavel pela criação de usuário e comparação de email no banco de dados"""
-    usuario = session.query(Usuario).filter(Usuario.email ==usuarioschemas.email).first()
+    usuario = autenticar_usuario(usuarioschemas.email, usuarioschemas.senha, session)
+
     if usuario:
         raise HTTPException(status_code=400, detail="email já cadastrado")
+
     else:
         criptografia = bcrypt_context.hash(usuarioschemas.senha)
-        novo_usuario = Usuario(usuarioschemas.nome, usuarioschemas.email, criptografia)
+        novo_usuario = Usuario(nome=usuarioschemas.nome,email=usuarioschemas.email,senha=criptografia, emailrec=usuarioschemas.emailrec,
+        )
         session.add(novo_usuario)
         session.commit() 
         return{"mensagem":"email cadastrado com sucesso!"}
@@ -48,8 +54,8 @@ async def login(loginSchema: LoginSchemas, session: Session= Depends(pegar_sessa
         raise HTTPException(status_code=400, detail="Credenciais inválidas... tente novamente")
 
     else:
-        acess_token = criar_token(usuario.id)
-        refresh_token = criar_token(usuario.id, duracao_token = timedelta(days=7))
+        acess_token = criar_token(usuario)
+        refresh_token = criar_token(usuario, duracao_token = timedelta(days=7))
         return{
             "acess_token" : acess_token,
             "refresh_token" : refresh_token,
@@ -76,9 +82,11 @@ async def login_form(dados_formulario: OAuth2PasswordRequestForm = Depends(), se
 
 @auth_router.get("/refresh")
 async def use_refresh_token(usuario : Usuario = Depends(verificar_token)):
-    acess_token = criar_token(usuario.id)
+    acess_token = criar_token(usuario.id_usuario)
     return{
         "acess_token" : acess_token,
         "token_type" : "Bearer"
     }
     
+
+
