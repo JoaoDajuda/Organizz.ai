@@ -1,21 +1,17 @@
 from fastapi import Depends, HTTPException
-from models import db, Usuario
+from models import Usuario
 from main import SECRET_KEY, ALGORITHM, oauth2_schema 
 from jose import jwt, JWTError
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import sessionmaker, Session
 
-# Crie a fábrica de sessões FORA da função (uma única vez ao iniciar a app)
-Session = sessionmaker(bind=db)
+from database import engine
 
 def pegar_sessao():
     """Essa função é responsável por abrir e fechar uma sessão do banco de dados sempre que for chamada"""
-    
-    session = Session()
-    try:
+
+    with Session(engine) as session:
         yield session
-    finally:
-        session.close()
 
 def verificar_token(token: str = Depends(oauth2_schema), session: Session = Depends(pegar_sessao)):
     """Essa função é necessária por fazer com que os usuários precisem logar pra acessar certas rotas"""
@@ -30,3 +26,4 @@ def verificar_token(token: str = Depends(oauth2_schema), session: Session = Depe
     if not usuario:
         raise HTTPException(status_code=401, detail="Acesso Inválido")
     return usuario
+
