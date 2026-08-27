@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "./Login.css"
 import Modal from "../../components/modal.jsx";
-// import criar_conta from "../../../../../BACKEND/auth_routes.py"
-import { CadastrarUsuario } from "../../services/api.js";
+import { CadastrarUsuario, LoginUsuario,  } from "../../services/api.js";
+// Falta o esqueceu a senha
 
 export default function Login() {
     const [nome, setNome] = useState(""); //Cadastro
@@ -24,12 +24,31 @@ export default function Login() {
         }
     }
 
+    const FazerLogin = async () => {
+        try {
+            const reponse = await LoginUsuario(email, senha);
+            console.log("Login realizado com sucesso:", reponse);
+        } catch (error) {
+            console.error("Erro ao fazer login:", error);
+        }
+    }
+
+    const EsqueceuSenha = async () => {
+        try {
+            const response = await EsqueceuSenha(email);
+            console.log("Recuperar a senha:", response);
+            setOpenModalEsqueceuSenha(false);
+        } catch (error) {
+            console.log("Erro ao recuperar a senha: ", error);
+        }
+    }
+
     return (
         <>
             <div className="ContainerPrincipal">
                 <img
                     className="ColunaEsquerda"
-                    src="/assets/colunaDourada.png"
+                    src="/assets/colunaRealista.png"
                 />
                 <div className="ContainerFormulario">
                     <img
@@ -66,11 +85,7 @@ export default function Login() {
                                     <input className="Input" type="password" placeholder="Digite sua senha:" onChange={(e) => {setSenha(e.target.value);}} />
                                 </div>
                                 <div className="areaLogin">
-                                    <button className="BotaoLogin" onClick={() => {
-                                        console.log("Email:", email); //RETIRAR DEPOIS
-                                        console.log("Senha:", senha); //RETIRAR DEPOIS
-                                        setOpenModalEsqueceuSenha(false)
-                                    }}>
+                                    <button className="BotaoLogin" onClick={EsqueceuSenha}>
                                         Enviar
                                     </button>
                                 </div>
@@ -94,14 +109,14 @@ export default function Login() {
                                 </div>
                             </Modal>
                         </div>
-                        <button className="BotaoLogin">
+                        <button className="BotaoLogin" onClick={FazerLogin}>
                             Entrar
                         </button>
                     </div>
                 </div>
                 <img
                     className="ColunaDireita"
-                    src="/assets/colunaDourada.png"
+                    src="/assets/colunaRealista.png"
                 />
             </div>
         </>
