@@ -11,10 +11,11 @@ pip install bcrypt==4.3.0
 python-jose[criptograpy]
 pymysql
 python-multipart
+'pydantic[email]'
 
 #pra instalar é so rodar no terminal:
 
-pip install sqlalchemy sqlalchemy.orm fastapi uvicorn passlib dotenv alembic bcrypt==4.3.0 python-jose[cryptography] pymysql python-multipart
+pip install sqlalchemy sqlalchemy.orm fastapi uvicorn passlib dotenv alembic bcrypt==4.3.0 python-jose[cryptography] pymysql python-multipart 'pydantic[email]'
 
 #para rodar o código: uvicorn main:app --reload
 
