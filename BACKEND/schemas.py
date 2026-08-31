@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from pydantic import EmailStr
 
 #parametros para a criação de usuários
 class UsuarioSchemas(BaseModel):
@@ -33,6 +34,19 @@ class EntradaSchema(BaseModel):
 class RotinaSchema(BaseModel):
     id_usuario: int
     rotina: str
+
+    class Config:
+        from_attributes = True
+
+class SolicitarEmailSchema(BaseModel):
+    email: EmailStr
+
+    class Config:
+        from_attributes = True
+
+class ResetSenhaSchema(BaseModel):
+    token: str
+    nova_senha: str
 
     class Config:
         from_attributes = True
