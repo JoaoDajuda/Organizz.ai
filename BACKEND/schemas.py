@@ -45,7 +45,8 @@ class SolicitarEmailSchema(BaseModel):
         from_attributes = True
 
 class ResetSenhaSchema(BaseModel):
-    token: str
+    email: EmailStr
+    codigo: str
     nova_senha: str
 
     class Config:
