@@ -1,0 +1,60 @@
+.calendario-page {
+  display: flex;
+  min-height: 100vh;
+  background: var(--navy-950);
+}
+
+.calendario-page__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendario-page__main {
+  flex: 1;
+  padding: var(--space-6);
+}
+
+.calendario-page__heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.calendario-page__title {
+  font-family: var(--font-display);
+  color: var(--gold-400);
+  font-size: 1.8rem;
+  letter-spacing: 0.04em;
+}
+
+.calendario-page__frase {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--ink-500);
+  font-size: 1.05rem;
+}
+
+.calendario-page__grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 400px) 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.calendario-page__coluna-esquerda {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 900px) {
+  .calendario-page {
+    flex-direction: column;
+  }
+  .calendario-page__grid {
+    grid-template-columns: 1fr;
+  }
+}

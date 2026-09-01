@@ -25,3 +25,19 @@
     width: 150px;
     height: 150px;
 }
+
+/* .Conteudo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 50px;
+} */
+
+/* .Grafico {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+} */

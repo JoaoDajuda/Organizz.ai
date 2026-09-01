@@ -8,15 +8,11 @@ export default function Financas() {
                     className="logo"
                     src="/assets/logoDourada.png"
                 />
-                <ul className="ItensHeader">
+                <ul className="ItensHeader" styles={{ listStyleType: "none" }}>
                     <li>Início</li>
                     <li>Rotina</li>
                     <li>Finanças</li>
                 </ul>
-                {/* <img ADICIONAR DEPOIS 
-                    className="Divisoria"
-                    src="/assets/divisoria.png"
-                /> */}
             </div>
         </div>
     )
