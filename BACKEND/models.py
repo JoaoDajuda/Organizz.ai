@@ -26,6 +26,8 @@ class Usuario(SQLModel, table=True):
     admin: bool = Field(default=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     deleted_at: Optional[datetime] = Field(default=None)
+    codigo_recuperacao: Optional[str] = Field(default=None, max_length=6)
+    codigo_recuperacao_expira: Optional[datetime] = Field(default=None)
 
     # Relacionamentos
     agendas: list["Agenda"] = Relationship(back_populates="usuario")
