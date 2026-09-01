@@ -6,6 +6,7 @@ class UsuarioSchemas(BaseModel):
     nome: str
     email: str
     senha: str
+    emailrec: Optional[str] = None
     ativo: Optional[bool]
     admin: Optional[bool]
 

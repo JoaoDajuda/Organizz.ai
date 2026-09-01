@@ -9,10 +9,12 @@ dotenv
 alembic
 pip install bcrypt==4.3.0
 python-jose[criptograpy]
+pymysql
+python-multipart
 
 #pra instalar é so rodar no terminal:
 
-pip install sqlalchemy sqlalchemy.orm fastapi uvicorn passlib dotenv alembic bcrypt==4.3.0 python-jose[cryptography]
+pip install sqlalchemy sqlalchemy.orm fastapi uvicorn passlib dotenv alembic bcrypt==4.3.0 python-jose[cryptography] pymysql python-multipart
 
 #para rodar o código: uvicorn main:app --reload
 

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from models import Valores, Usuario
+from models import Usuario, Valores
 from sqlalchemy.orm import Session
 from sqlalchemy import update
 from dependencies import pegar_sessao
@@ -9,13 +9,14 @@ math_router = APIRouter(prefix="/contas", tags=["contas"])
 add_router = APIRouter(prefix="/soma", tags=["contas"])
 sub_router = APIRouter(prefix="/subtracao", tags=["contas"])
 
+
 @math_router.post("/adicao")
 async def criar_input(entradaschema: EntradaSchema, session: Session = Depends(pegar_sessao)):
     """essa rota é reponsavel por criar o acesso as entradas de valores do usuário no banco de dados"""
-    usuario = session.query(Usuario).filter(Usuario.id == entradaschema.id_usuario).first()
+    usuario = session.query(Usuario).filter(Usuario.id_usuario == entradaschema.id_usuario).first()
     if usuario:
         novo_input = Valores(
-            usuario=entradaschema.id_usuario, 
+            id_usuario=entradaschema.id_usuario, 
             valor=entradaschema.valor
         )
         session.add(novo_input)
@@ -27,7 +28,7 @@ async def criar_input(entradaschema: EntradaSchema, session: Session = Depends(p
 @add_router.patch("/soma")
 async def soma(entradaschema: EntradaSchema, session: Session = Depends(pegar_sessao)):
     """Rota responsável por somar os valores solicitados no banco de dados"""
-    usuario = session.query(Usuario).filter(Usuario.id == entradaschema.id_usuario).first()
+    usuario = session.query(Usuario).filter(Usuario.id_usuario == entradaschema.id_usuario).first()
     if usuario:
 
         registro = session.query(Valores).filter(Valores.usuario == entradaschema.id_usuario).order_by(Valores.id.desc()).first()
@@ -37,7 +38,7 @@ async def soma(entradaschema: EntradaSchema, session: Session = Depends(pegar_se
         if registro:
             adicao = valor_anterior + entradaschema.valor
 
-            nova_movimentacao = Valores(valor= adicao, usuario=usuario.id)
+            nova_movimentacao = Valores(valor= adicao, id_usuario=usuario.id)
 
             session.add(nova_movimentacao)
             session.commit()

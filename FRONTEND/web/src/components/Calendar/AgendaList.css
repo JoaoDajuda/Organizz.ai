@@ -1,0 +1,109 @@
+.agenda-list {
+  background: var(--navy-900);
+  border: var(--border-gold);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-panel);
+  padding: var(--space-5);
+  height: 100%;
+}
+
+.agenda-list__title {
+  font-family: var(--font-display);
+  color: var(--gold-400);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+  margin-bottom: var(--space-4);
+}
+
+.agenda-list__items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  max-height: 560px;
+  overflow-y: auto;
+}
+
+.agenda-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  border-bottom: 1px solid rgba(201, 162, 39, 0.1);
+}
+
+.agenda-list__item:hover {
+  background: var(--navy-800);
+}
+
+.agenda-list__horario {
+  font-family: var(--font-body);
+  color: var(--ink-500);
+  font-size: 0.9rem;
+  width: 48px;
+  flex-shrink: 0;
+}
+
+.agenda-list__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  background: var(--navy-700);
+}
+
+.agenda-list__icon--rotina {
+  background: rgba(217, 182, 74, 0.2);
+}
+.agenda-list__icon--alimentacao {
+  background: rgba(74, 159, 217, 0.2);
+}
+.agenda-list__icon--estudos {
+  background: rgba(217, 123, 74, 0.2);
+}
+.agenda-list__icon--tcc {
+  background: rgba(159, 106, 217, 0.2);
+}
+.agenda-list__icon--academia {
+  background: rgba(74, 159, 217, 0.2);
+}
+.agenda-list__icon--online {
+  background: rgba(159, 106, 217, 0.2);
+}
+
+.agenda-list__texto {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.agenda-list__nome {
+  font-family: var(--font-body);
+  color: var(--ink-100);
+  font-size: 1.05rem;
+}
+
+.agenda-list__categoria {
+  font-size: 0.8rem;
+  color: var(--ink-500);
+  text-transform: capitalize;
+}
+
+.agenda-list__checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--gold-500);
+  cursor: pointer;
+}
+
+.agenda-list__vazio {
+  color: var(--ink-500);
+  font-family: var(--font-body);
+  font-style: italic;
+  text-align: center;
+  padding: var(--space-6) 0;
+}
