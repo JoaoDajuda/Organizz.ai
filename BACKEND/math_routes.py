@@ -31,14 +31,14 @@ async def soma(entradaschema: EntradaSchema, session: Session = Depends(pegar_se
     usuario = session.query(Usuario).filter(Usuario.id_usuario == entradaschema.id_usuario).first()
     if usuario:
 
-        registro = session.query(Valores).filter(Valores.usuario == entradaschema.id_usuario).order_by(Valores.id.desc()).first()
+        registro = session.query(Valores).filter(Valores.id_usuario == entradaschema.id_usuario).order_by(Valores.id.desc()).first()
 
         valor_anterior = registro.valor
 
         if registro:
             adicao = valor_anterior + entradaschema.valor
 
-            nova_movimentacao = Valores(valor= adicao, id_usuario=usuario.id)
+            nova_movimentacao = Valores(valor= adicao, id_usuario=usuario.id_usuario)
 
             session.add(nova_movimentacao)
             session.commit()
@@ -65,17 +65,17 @@ async def soma(entradaschema: EntradaSchema, session: Session = Depends(pegar_se
 @sub_router.patch("/subtracao")
 async def subtracao(entradaschema: EntradaSchema, session: Session = Depends(pegar_sessao)):
     """Rota responsável por subtrair os valores solicitados no banco de dados"""
-    usuario = session.query(Usuario).filter(Usuario.id == entradaschema.id_usuario).first()
+    usuario = session.query(Usuario).filter(Usuario.id_usuario == entradaschema.id_usuario).first()
     if usuario:
 
-        registro = session.query(Valores).filter(Valores.usuario == entradaschema.id_usuario).order_by(Valores.id.desc()).first()
+        registro = session.query(Valores).filter(Valores.id_usuario == entradaschema.id_usuario).order_by(Valores.id.desc()).first()
 
         valor_anterior = registro.valor
 
         if registro:
             subtracao = valor_anterior - entradaschema.valor
 
-            nova_movimentacao = Valores(valor= subtracao, usuario=usuario.id)
+            nova_movimentacao = Valores(valor= subtracao, id_usuario=usuario.id_usuario)
 
             session.add(nova_movimentacao)
             session.commit()
