@@ -3,17 +3,15 @@ import "./Financas.css"
 export default function Financas() {
     return (
         <div className="PaginaFinancas">
-            <div className="Header">
+            <div className="Menu">
                 <img
                     className="logo"
-                    src="/assets/logoDourada.png"
+                    src="/assets/logoMinimal.png"
                 />
-                <ul className="ItensHeader" styles={{ listStyleType: "none" }}>
-                    <li>Início</li>
-                    <li>Rotina</li>
-                    <li>Finanças</li>
-                </ul>
+                <img className="DaviIMG" src="/assets/davi.png" alt="" />
             </div>
         </div>
     )
 }
+
+// Tranformar essa porra toda em um componente de menu, e colocar o conteúdo da página dentro de outro componente, que vai ficar abaixo do menu.

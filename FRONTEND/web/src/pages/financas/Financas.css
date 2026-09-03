@@ -1,43 +1,28 @@
 .PaginaFinancas {
     min-height: 100vh;
-    background-color: #1C1717;
+    background-color: #000E1B;
+    border: 20px solid transparent; 
+    border-style: solid; 
+    border-width: 20px;  
+    border-image: url('/assets/bordaPrincipal.png') 30 stretch; /*TRANSFORMAR EM SVG*/
 }
 
-.Header {
+.Menu {
     display: flex;
-    align-items: center;
-    flex-direction: row;
-    padding: 10px;
-}
-
-.ItensHeader {
-    display: flex;
+    flex-direction: column;
+    width: 15vw;
+    height: 90vh;
     justify-content: space-between;
-    color: white;
-    flex-direction: row;
-    list-style: none;
-    font-size: larger;
-    gap: 24px;
-    margin-left: 5%;
 }
 
 .logo {
     width: 150px;
     height: 150px;
+    margin: 2px;
 }
 
-/* .Conteudo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 50px;
-} */
-
-/* .Grafico {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.daviIMG {
     width: 100%;
-} */
+    height: 100%;
+    bottom: 0;
+}

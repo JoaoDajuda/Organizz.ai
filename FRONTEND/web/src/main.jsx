@@ -6,6 +6,6 @@ import Financas from './pages/financas/Financas.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Login />
+    <Login/>
   </StrictMode>,
 )
