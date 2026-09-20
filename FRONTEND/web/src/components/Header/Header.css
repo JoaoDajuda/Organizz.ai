@@ -1,0 +1,111 @@
+.MainContainer {
+    position: relative;
+    display: grid;
+    grid-template-columns: 17.68% 1fr;
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
+    padding: clamp(12px, 2vw, 20px);
+    padding-bottom: clamp(4px, 1vw, 5px);
+    box-sizing: border-box;
+}
+
+.MainContainer-borda {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.Menu {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    padding: clamp(8px, 1vw, 10px);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.ItensMenu {
+    display: flex;
+    justify-content: flex-start;
+    color: white;
+    flex-direction: column;
+    list-style: none;
+    font-size: clamp(0.95rem, 1.1vw + 0.6rem, 1.25rem);
+    gap: clamp(12px, 2vh, 24px);
+    margin-left: 5%;
+    margin-top: 10%;
+}
+
+.ItensMenu {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+}
+
+.ItensMenu a {
+    text-decoration: none;
+    font-family: var(--font-heading, 'Cinzel', serif);
+    color: var(--color-cream, #E8DFC8);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    padding: 6px 14px;
+    border-radius: 4px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.ItensMenu a:hover {
+    color: var(--color-gold, #C9A94D);
+}
+
+.ItensMenu a.active {
+    color: var(--color-navy, #1B2A4A);
+    background-color: var(--color-gold, #C9A94D);
+    font-weight: 600;
+}
+
+.logo {
+    width: clamp(80px, 12vw, 150px);
+    height: auto;
+    max-width: 100%;
+    margin-left: 10%;
+}
+
+.davidImage {
+    display: flex;
+    width: auto;
+    max-width: min(220px, 90%);
+    height: auto;
+    margin-top: auto;
+}
+
+.Header {
+    color: #fff;
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+}
+
+.content {
+    grid-column: 2;
+    grid-row: 2;
+    padding: clamp(12px, 2vw, 20px);
+    box-sizing: border-box;
+    border-top: 30px solid transparent;
+    border-image-slice: fill 0;
+    border-image-width: 30px;
+    border-image-repeat: repeat;
+    color: white;
+    font-size: clamp(0.9rem, 0.5vw + 0.75rem, 1rem);
+}
