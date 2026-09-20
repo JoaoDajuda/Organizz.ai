@@ -49,7 +49,7 @@ export default function Login() {
                 />
                 <div className="ContainerFormulario">
                     <img
-                        className="logo"
+                        className="Logo"
                         src="/assets/logoMinimal.png"
                     />
                     {modo == "Cadastro" && (
