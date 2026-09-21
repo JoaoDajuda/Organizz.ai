@@ -1,9 +1,8 @@
-import Header from "../../components/Header/Header.jsx"
-
 export default function Financas() {
     return (
         <div className="PaginaFinancas">
-            <Header />
+            <h1>Finanças</h1>
+            <p>Esta é a página de finanças.</p>
         </div>
     )
 }

@@ -1,19 +1,16 @@
-// Rotina.jsx — CORRIGIDO
-import CalendarGrid from "../../components/Calendar/Calendar";
+import CalendarGrid from "../../components/Calendar/Calendar.jsx"
 import './Rotina.css';
 
-function Rotina() {
+export default function Rotina() {
     return (
-        <div className="agenda-page">
+        <div className="PaginaRotina">
             <div className="agenda-left">
                 <CalendarGrid />
-                <ProximosCompromissos />  {/* componente novo, lista simples */}
+                {/* <ProximosCompromissos /> entra aqui depois */}
             </div>
             <div className="agenda-right">
-                <AgendaDoDia />  {/* lista de horários, como no mockup */}
+                {/* <AgendaDoDia /> entra aqui depois */}
             </div>
         </div>
-    );
+    )
 }
-
-export default Rotina;
