@@ -1,8 +1,13 @@
 import "./Header.css"
-import Calendar from "../Calendar/Calendar.jsx"
 import { Outlet, NavLink } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 export default function Header() {
+    const navigate = useNavigate()
+    const handleLogout = () => {
+        // localStorage.removeItem("token") — quando tiver autenticação
+        navigate("/login")
+    }
     return (
         <div className="MainContainer">
             <img className="MainContainer-borda" src="/assets/bordaPrincipal2.png" alt="" />
@@ -10,17 +15,12 @@ export default function Header() {
                 <img className="logo" src="/assets/logoMinimal.png" alt="Organizzai" />
                 <ul className="ItensMenu">
                     <li>
-                        <NavLink to="/" end className={({ isActive }) => isActive ? "active" : ""}>
-                            Início
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/rotina" className={({ isActive }) => isActive ? "active" : ""}>
+                        <NavLink to="/app/rotina" className={({ isActive }) => isActive ? "active" : ""}>
                             Rotina
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/financas" className={({ isActive }) => isActive ? "active" : ""}>
+                        <NavLink to="/app/financas" className={({ isActive }) => isActive ? "active" : ""}>
                             Finanças
                         </NavLink>
                     </li>
@@ -29,7 +29,7 @@ export default function Header() {
             </div>
             <div className="Header">
                 <h1>Organizzai</h1>
-                <h3>Perfil</h3>
+                <button onClick={handleLogout} className="logout-button">Sair</button>
             </div>
             <div className="content">
                 <Outlet />
