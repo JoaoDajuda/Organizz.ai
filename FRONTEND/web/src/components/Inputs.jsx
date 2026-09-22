@@ -23,16 +23,6 @@ const ModalStyle = {
     },
 }
 
-export default function Modal({isOpen, onClose, children}) {
+export default function Inputs({}) {
     
-    if (isOpen) {
-    return (
-        <div style={ModalStyle.overlay} onClick={onClose}>
-            <div style={ModalStyle.ContainerPrincipal} onClick={(e) => e.stopPropagation()}>
-                {children}
-            </div>
-        </div>
-        )
-    } 
-    return null
 }

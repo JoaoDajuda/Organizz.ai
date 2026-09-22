@@ -3,10 +3,10 @@ from sqlmodel import Session, select
 from models import Usuario
 from dependencies import pegar_sessao
 from schemas import UsuarioSchemas, LoginSchemas
- 
+
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
- 
- 
+
+
 @auth_router.post("/criar_conta")
 async def criar_conta(usuarioschemas: UsuarioSchemas, session: Session = Depends(pegar_sessao)):
     """essa rota é responsavel pela criação de usuário e comparação de email no banco de dados"""

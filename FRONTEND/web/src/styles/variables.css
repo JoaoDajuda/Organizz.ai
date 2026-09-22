@@ -1,0 +1,50 @@
+/* ==========================================================
+   ORGANIZA — Design tokens
+   Identidade visual greco-romana: navy profundo + dourado
+   ========================================================== */
+
+:root {
+  /* Cores base */
+  --navy-950: #000e1b;
+  --navy-900: #041a2c;
+  --navy-800: #0a2440;
+  --navy-700: #12324f;
+  --navy-600: #1c4363;
+
+  --gold-500: #c9a227;
+  --gold-400: #d9b64a;
+  --gold-300: #e8ca7b;
+  --gold-100: #f4e6c1;
+
+  --ink-100: #f5f2e9;
+  --ink-300: #cdd6df;
+  --ink-500: #8fa0ae;
+
+  /* Cores semânticas (categorias da agenda) */
+  --cat-rotina: #d9b64a;
+  --cat-treinos: #4a9fd9;
+  --cat-financas: #3fae6a;
+  --cat-eventos: #9f6ad9;
+  --cat-estudos: #d97b4a;
+
+  /* Tipografia */
+  --font-display: "Cinzel", serif;
+  --font-body: "Cormorant Garamond", serif;
+
+  /* Espaçamento */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Bordas e raios */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --border-gold: 1px solid rgba(201, 162, 39, 0.35);
+
+  /* Sombra */
+  --shadow-panel: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
