@@ -18,7 +18,7 @@ oauth2_schema = OAuth2PasswordBearer(tokenUrl="auth/login_form")
 
 from auth_routes import auth_router
 from math_routes import math_router, add_router, sub_router
-
+from act_routes import act_router
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -31,3 +31,4 @@ app.include_router(auth_router)
 app.include_router(math_router)
 app.include_router(add_router)
 app.include_router(sub_router)
+app.include_router(act_router)

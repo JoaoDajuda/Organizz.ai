@@ -47,20 +47,6 @@ async def soma(entradaschema: EntradaSchema, session: Session = Depends(pegar_se
             return {"mensagem": "id não cadastrado, tente novamente"}
     return {"mensagem": "Novo registro criado com sucesso!"}
 
-# @math_router.post("/adicao")
-# async def criar_input(entradaschema: EntradaSchema, session: Session = Depends(pegar_sessao)):
-#     """essa rota é reponsavel por criar o acesso as entradas de valores do usuário no banco de dados"""
-#     usuario = session.query(Usuario).filter(Usuario.id == entradaschema.id_usuario).first()
-#     if usuario:
-#         novo_input = Valores(
-#             usuario=entradaschema.id_usuario, 
-#             valor=entradaschema.valor
-#         )
-#         session.add(novo_input)
-#         session.commit()
-#         return {"mensagem": "entrada registrada com sucesso!"}
-#     else:
-#         return{"mensagem":{"id não cadastrado, tente novamente"}}
 
 @sub_router.patch("/subtracao")
 async def subtracao(entradaschema: EntradaSchema, session: Session = Depends(pegar_sessao)):

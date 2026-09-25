@@ -33,10 +33,20 @@ class EntradaSchema(BaseModel):
 
 class RotinaSchema(BaseModel):
     id_usuario: int
+    data: str
+    titulo: str
     rotina: str
-
+    conclusao: bool
     class Config:
         from_attributes = True
+
+class DeleteSchema(BaseModel):
+    id_tarefa: int
+    rotina: str
+    id_usuario: str
+    class Config:
+        from_attributes = True
+
 
 class SolicitarEmailSchema(BaseModel):
     email: EmailStr
