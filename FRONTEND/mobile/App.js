@@ -1,31 +1,31 @@
-import { StyleSheet, Image, Text, View, SafeAreaView, TextInput, TouchableOpacity, Button} from 'react-native';
+import { StyleSheet, Image, Text, View, TextInput, TouchableOpacity, Button} from 'react-native';
 
 export default function Organizzai() {
   return (
-    <SafeAreaView style={styles.container}>
-    <Image style={styles.coluna_topo} source={require('./assets/colunaInvertidaCinza.png')} />
+    <View style={styles.container}>
+    {/* <Image style={styles.coluna_topo} source={require('./assets/colunaInvertidaCinza.png')} /> */}
     <View style={styles.formContainer}>
-      <Image style={styles.logo} source={require('./assets/logoDourada.png')}></Image>
+      { <Image style={styles.logo} source={require('./assets/logoBranco2.jpeg')}></Image> }
       <View style={styles.containerinputs}>
         <TextInput style={styles.input} placeholder="Digite seu email:" placeholderTextColor="#fff"></TextInput>
         <TextInput style={styles.input} placeholder="Digite sua senha:" placeholderTextColor="#fff"></TextInput>
       </View>
       <TouchableOpacity>
-        <Text style={{color: '#fff'}}>Esqueceu sua senha?</Text>
+        <Text style={{color: '#000000'}}>Esqueceu sua senha?</Text>
       </TouchableOpacity>
       <View style={styles.viewBotao}>
         <Button style={styles.botao} color={'#4A4540'} title="Login" onPress={() => {}} />
       </View>
     </View>
-    <Image style={styles.coluna_rodape} source={require('./assets/colunaCinza.png')} />
-  </SafeAreaView>
+    {/* <Image style={styles.coluna_rodape} source={require('./assets/colunaCinza.png')} /> */}
+  </View>
   )
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1C1717',
+    backgroundColor: 'white',/*'#1C1717'*/
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     width: 250,
     margin: 5,
     borderRadius: 5,
-    backgroundColor: '#4A4540',
+    backgroundColor: '#a17d3b',/*'#4A4540',*/
     color: '#fff',
     padding: 12,
 },
