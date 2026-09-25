@@ -14,12 +14,6 @@ from email_utils import enviar_email
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
-def gerar_recuperacao() -> str:
-    """Gera uma senha aleatória de 8 caracteres contendo letras e números."""
-    caracteres = string.ascii_letters + string.digits
-    senha_aleatoria = ''.join(random.choices(caracteres, k=6))
-    return ''.join(random.choices(caracteres, k=6))
-
 def criar_token_recuperacao(id_usuario):
     expira = datetime.now(timezone.utc) + timedelta(minutes=15)
     dict_info = {"sub": str(id_usuario), "exp": int(expira.timestamp()), "tipo": "recuperacao"}
@@ -107,35 +101,30 @@ async def esqueci_senha(dados: SolicitarEmailSchema, session: Session = Depends(
     usuario = session.query(Usuario).filter(Usuario.email == dados.email).first()
 
     if usuario:
-        codigo = gerar_recuperacao()
-        usuario.codigo_recuperacao = codigo
-        usuario.codigo_recuperacao_expira = datetime.utcnow() + timedelta(minutes=15)
-        session.add(usuario)
-        session.commit()
-
-        corpo = f"<p>Seu código para redefinir sua senha (válido por 15 minutos) é:</p><h2>{codigo}</h2>"
+        token = criar_token_recuperacao(usuario.id_usuario)
+        link = f"http://localhost:3000/resetar-senha?token={token}"
+        corpo = f"<p>Clique no link para redefinir sua senha (válido por 15 minutos):</p><a href='{link}'>{link}</a>"
         enviar_email(usuario.email, "Recuperação de senha - Organizz.ai", corpo)
 
     return {"mensagem": "Se o email estiver cadastrado, um link de recuperação de senha foi enviado."}
 
-
 @auth_router.post("/resetar-senha")
 async def resetar_senha(dados: ResetSenhaSchema, session: Session = Depends(pegar_sessao)):
-    """essa rota é responsável por validar o código e atualizar a senha do usuário"""
-    usuario = session.query(Usuario).filter(Usuario.email == dados.email).first()
+    """essa rota é responsável por validar o token e atualizar a senha do usuário"""
+    try:
+        payload = jwt.decode(dados.token, SECRET_KEY, algorithms=[ALGORITHM])
+        if payload.get("tipo") != "recuperacao":
+            raise HTTPException(status_code=400, detail="Token Inválido")
+        id_usuario = int(payload.get("sub"))
 
+    except JWTError:
+        raise HTTPException(status_code=400, detail="Token Inválido")
+
+    usuario = session.query(Usuario).filter(Usuario.id_usuario == id_usuario).first()
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
 
-    if not usuario.codigo_recuperacao or usuario.codigo_recuperacao != dados.codigo:
-        raise HTTPException(status_code=400, detail="Código inválido")
-
-    if usuario.codigo_recuperacao_expira < datetime.utcnow():
-        raise HTTPException(status_code=400, detail="Código expirado")
-
     usuario.senha = bcrypt_context.hash(dados.nova_senha)
-    usuario.codigo_recuperacao = None
-    usuario.codigo_recuperacao_expira = None
     session.add(usuario)
     session.commit()
 
