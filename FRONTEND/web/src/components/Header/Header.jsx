@@ -28,7 +28,7 @@ export default function Header() {
                 <img className="davidImage" src="/assets/davi.png" alt="" />
             </div>
             <div className="Header">
-                <h1>Organizzai</h1>
+                <h1>Organizz.ai</h1>
                 <button onClick={handleLogout} className="logout-button">Sair</button>
             </div>
             <div className="content">
