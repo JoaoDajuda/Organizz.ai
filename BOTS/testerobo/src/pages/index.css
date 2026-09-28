@@ -1,0 +1,52 @@
+.X {
+    color: red;
+    position: absolute;
+    top: 10px;
+    left: 15px;
+}
+
+.modal {
+    background-color: black;
+    width: 90%;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.buttonsend {
+    border: 1px solid white;
+    border-radius: 5px;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+}
+
+.InputUser {
+    width: 90%;
+    height: 40px;
+    border: none;
+    padding: 0 0.5rem;
+    box-sizing: border-box; 
+}
+
+.padrao{
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    position: absolute;
+    top: 90%;
+}
+
+.msglist{
+    overflow-y: auto;
+    max-height: 50%;
+    max-width: 50%;
+    gap: 20px;
+}
