@@ -1,10 +1,12 @@
 import "./Header.css"
 import { Outlet, NavLink } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
+import { Logout } from "../../services/api"
 
 export default function Header() {
     const navigate = useNavigate()
     const handleLogout = () => {
+        Logout()
         navigate("/login")
     }
     return (
