@@ -38,11 +38,12 @@ class Usuario(SQLModel, table=True):
 
 class Agenda(SQLModel, table=True):
     id_agenda: Optional[int] = Field(default=None, primary_key=True)
-    id_usuario: int = Field(foreign_key="usuario.id_usuario", index=True)
+    id_usuario: int = Field(foreign_key="usuario.id_usuario", index=False)
     titulo: str = Field(max_length=200)
     data: str = Field()
     status: StatusAgenda = Field(default=StatusAgenda.pendente)
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    deleted_temp: Optional[datetime] = Field(default=None)
     deleted_at: Optional[datetime] = Field(default=None)
 
     # Relacionamento
