@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom"
 export default function Header() {
     const navigate = useNavigate()
     const handleLogout = () => {
-        // localStorage.removeItem("token") — quando tiver autenticação
         navigate("/login")
     }
     return (
