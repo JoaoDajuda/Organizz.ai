@@ -2,7 +2,9 @@
     min-height: 100vh;
     display: flex;
     justify-content: center;
+    align-items: center;
     overflow: hidden;
+    position: relative;
 }
 
 .ContainerPrincipal{
@@ -12,28 +14,40 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 40px solid transparent;
+    z-index: 2;
+}
 
+.ContainerPrincipal::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 40px solid transparent;
     border-image-source: url("/assets/bordaLogin.png");
     border-image-slice: 40;
     border-image-width: 40px;
     border-image-repeat: stretch;
+    pointer-events: none;
+    z-index: 3;
 }
 
 .ColunaEsquerda {
     position: absolute;
+    top: 4.5vh;
     left: 0;
-    height: 95vh;
+    height: 93vh;
     object-fit: contain;
     pointer-events: none;
+    z-index: 1;
 }
 
 .ColunaDireita {
     position: absolute;
+    top: 4.5vh;
     right: 0;
-    height: 95vh;
+    height: 93vh;
     object-fit: contain;
     pointer-events: none;
+    z-index: 1;
 }
 
 .ContainerFormulario {
@@ -54,6 +68,13 @@
 .Logo {
     width: 150px;
     height: auto;
+}
+
+.confirmacao {
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
 }
 
 .inputs{
