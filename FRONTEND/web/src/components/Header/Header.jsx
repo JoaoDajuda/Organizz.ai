@@ -1,11 +1,12 @@
 import "./Header.css"
 import { Outlet, NavLink } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
+import { Logout } from "../../services/api.js"
 
 export default function Header() {
     const navigate = useNavigate()
     const handleLogout = () => {
-        // localStorage.removeItem("token") — quando tiver autenticação
+        Logout()
         navigate("/login")
     }
     return (
