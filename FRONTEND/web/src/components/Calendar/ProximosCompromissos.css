@@ -1,0 +1,79 @@
+.proximos {
+  background: var(--navy-900);
+  border: var(--border-gold);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-panel);
+  padding: var(--space-5);
+  margin-top: var(--space-4);
+}
+
+.proximos__title {
+  font-family: var(--font-display);
+  color: var(--gold-400);
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-3);
+}
+
+.proximos__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+}
+
+.proximos__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.proximos__icon {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  background: var(--navy-700);
+}
+
+.proximos__icon--academia {
+  background: rgba(74, 159, 217, 0.2);
+}
+.proximos__icon--online {
+  background: rgba(159, 106, 217, 0.2);
+}
+.proximos__icon--financas {
+  background: rgba(63, 174, 106, 0.2);
+}
+
+.proximos__info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.proximos__nome {
+  font-family: var(--font-body);
+  color: var(--ink-100);
+  font-size: 1.05rem;
+}
+
+.proximos__categoria {
+  font-size: 0.8rem;
+  color: var(--ink-500);
+  text-transform: capitalize;
+}
+
+.proximos__horario {
+  font-family: var(--font-body);
+  color: var(--gold-300);
+  font-size: 0.95rem;
+}
+
+.proximos__vazio {
+  color: var(--ink-500);
+  font-family: var(--font-body);
+  font-style: italic;
+}

@@ -1,0 +1,83 @@
+/* fullcalendar-overrides.css */
+
+.fc {
+  /* Variáveis nativas do FullCalendar v6 */
+  --fc-border-color: var(--color-gold, #C9A94D);
+  --fc-button-bg-color: var(--color-navy, #1B2A4A);
+  --fc-button-border-color: var(--color-navy, #1B2A4A);
+  --fc-button-hover-bg-color: var(--color-gold, #C9A94D);
+  --fc-button-hover-border-color: var(--color-gold, #C9A94D);
+  --fc-button-active-bg-color: var(--color-gold-dark, #A8863E);
+  --fc-today-bg-color: rgba(201, 169, 77, 0.12);
+  --fc-neutral-bg-color: var(--color-parchment, #F5F0E6);
+  --fc-page-bg-color: transparent;
+  --fc-event-bg-color: var(--color-navy, #1B2A4A);
+  --fc-event-border-color: var(--color-gold, #C9A94D);
+
+  font-family: var(--font-body, 'Cormorant Garamond', serif);
+}
+
+/* Título do calendário (mês/ano) */
+.fc .fc-toolbar-title {
+  font-family: var(--font-heading, 'Cinzel', serif);
+  color: var(--color-navy, #ffffff) !important;
+  font-size: clamp(1.25rem, 2vw + 0.5rem, 2rem);
+  letter-spacing: 0.03em;
+}
+
+/* Botões (prev/next/today/view switch) */
+.fc .fc-button {
+  font-family: var(--font-heading, 'Cinzel', serif);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active {
+  background-color: var(--color-gold-dark, #A8863E);
+  border-color: var(--color-gold-dark, #A8863E);
+}
+
+/* Cabeçalho dos dias da semana */
+.fc .fc-col-header-cell-cushion {
+  font-family: var(--font-heading, 'Cinzel', serif);
+  color: var(--color-navy, #ffffff) !important;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+/* Números dos dias */
+.fc .fc-daygrid-day-number {
+  font-family: var(--font-body, 'Cormorant Garamond', serif);
+  color: var(--color-navy, #ffffff) !important;
+}
+
+/* Dia atual */
+.fc .fc-day-today .fc-daygrid-day-number {
+  font-weight: 700;
+  color: var(--color-gold-dark, #A8863E);
+}
+
+/* Eventos */
+.fc .fc-event {
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-size: 0.85rem;
+}
+
+.fc .fc-event-title {
+  font-family: var(--font-body, 'Cormorant Garamond', serif);
+}
+
+/* Linhas de grade mais discretas */
+.fc-theme-standard td, .fc-theme-standard th {
+  border-color: rgba(201, 169, 77, 0.25);
+}
+
+.calendar-wrapper {
+  max-width: 480px !important;
+  width: 100%;
+  height: calc(100vh - 280px) !important; /* subtrai a altura do Header + Próximos Compromissos + paddings */
+}
