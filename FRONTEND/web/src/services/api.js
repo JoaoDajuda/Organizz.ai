@@ -27,7 +27,6 @@ export async function LoginUsuario(email, senha) {
         throw new Error(mensagem);
     }
 }
-
 // Para enviar o token em toda requisição
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem("acess_token");
@@ -43,6 +42,7 @@ api.interceptors.response.use(
     async (error) => {
         const original = error.config;
         const status = error.response?.status;
+
         if (status === 401 && !original._retry && !original.url.includes("auth/")) {
             original._retry = true;
             try {
@@ -90,3 +90,4 @@ export async function RedefinirSenha(email, codigo, novaSenha) {
         throw new Error(mensagem);
     }
 }
+

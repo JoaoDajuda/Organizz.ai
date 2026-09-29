@@ -1,17 +1,8 @@
-import "./Financas.css"
-
 export default function Financas() {
     return (
         <div className="PaginaFinancas">
-            <div className="Menu">
-                <img
-                    className="logo"
-                    src="/assets/logoMinimal.png"
-                />
-                <img className="DaviIMG" src="/assets/davi.png" alt="" />
-            </div>
+            <h1>Finanças</h1>
+            <p>Esta é a página de finanças.</p>
         </div>
     )
 }
-
-// Tranformar essa porra toda em um componente de menu, e colocar o conteúdo da página dentro de outro componente, que vai ficar abaixo do menu.

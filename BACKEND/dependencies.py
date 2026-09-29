@@ -1,8 +1,15 @@
-from sqlmodel import Session
-from database import engine 
+from fastapi import Depends, HTTPException
+from models import Usuario
+from main import SECRET_KEY, ALGORITHM, oauth2_schema 
+from jose import jwt, JWTError
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
+
+from database import engine
 
 def pegar_sessao():
     """Essa função é responsável por abrir e fechar uma sessão do banco de dados sempre que for chamada"""
+
     with Session(engine) as session:
         yield session
 
