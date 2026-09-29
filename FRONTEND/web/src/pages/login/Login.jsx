@@ -79,7 +79,7 @@ export default function Login() {
                 />
                 <div className="ContainerFormulario">
                     <img
-                        className="logo"
+                        className="Logo"
                         src="/assets/logoMinimal.png"
                     />
                     {confirmacao && <p className="confirmacao">{confirmacao}</p>}
@@ -106,8 +106,8 @@ export default function Login() {
                     {modo == "Login" && (
                         <>
                             <div className="inputs">
-                                <input className="Input" type="email" placeholder="Digite seu email ou usuário:" value={criarEmail} onChange={(e) => setcriarEmail(e.target.value)} />
-                                <input className="Input" type="password" placeholder="Digite sua senha:" value={criarSenha} onChange={(e) => setcriarSenha(e.target.value)} />
+                                <input className="Input" type="email" placeholder="Digite seu email ou usuário:" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                <input className="Input" type="password" placeholder="Digite sua senha:" value={senha} onChange={(e) => setSenha(e.target.value)} />
                             </div>
                             <div className="areaLogin">
                                 <div className="editaUsuario">
@@ -123,7 +123,7 @@ export default function Login() {
                     {modo == "EsqueceuSenha" && (
                         <>
                             <div className="inputs">
-                                <input className="Input" type="email" placeholder="Digite seu email ou usuário:" value={criarEmail} onChange={(e) => setcriarEmail(e.target.value)} />
+                                <input className="Input" type="email" placeholder="Digite seu email ou usuário:" value={email} onChange={(e) => setEmail(e.target.value)} />
                             </div>
                             <div className="areaLogin">
                                 <div className="editaUsuario">
@@ -131,7 +131,7 @@ export default function Login() {
                                     <p className="cadastro" onClick={() => {setModo("Cadastro"), setConfirmacao("")}}>Cadastre-se</p>
                                     <p className="cadastro" onClick={() => {setModo("Login"), setConfirmacao("")}}>Login</p>
                                 </div>
-                                <button className="BotaoLogin" onClick={FazerCadastro}>
+                                <button className="BotaoLogin" onClick={EsqueceuSenha}>
                                     Enviar email
                                 </button>
                             </div>

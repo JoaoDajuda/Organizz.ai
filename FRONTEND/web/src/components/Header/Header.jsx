@@ -1,7 +1,7 @@
 import "./Header.css"
 import { Outlet, NavLink } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
-import Logout, { Logout } from "../../services/api"
+import { Logout } from "../../services/api.js"
 
 export default function Header() {
     const navigate = useNavigate()
@@ -29,7 +29,7 @@ export default function Header() {
                 <img className="davidImage" src="/assets/davi.png" alt="" />
             </div>
             <div className="Header">
-                <h1>Organizz.ai</h1>
+                <h1>Organizzai</h1>
                 <button onClick={handleLogout} className="logout-button">Sair</button>
             </div>
             <div className="content">

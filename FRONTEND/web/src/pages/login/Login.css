@@ -51,22 +51,22 @@
 }
 
 .ContainerFormulario {
-    width: 400px;
-    height: 100%;
+    width: 500px;
+    height: 600px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    border: 20px solid transparent; /* precisa ter largura de borda */
-    border-style: solid; /* precisa disso */
-    border-width: 20px;  /* e disso */
-    border-image: url('/assets/bordaInputs.png') 30 stretch; /* ou stretch, repeat */
-    padding: 20px; /* espaço interno pro conteúdo não colar na borda */
+    border: 40px solid transparent;
+    border-image-source: url("/assets/bordaLogin.png");
+    border-image-slice: 40;
+    border-image-width: 40px;
+    border-image-repeat: stretch;
 }
 
-.logo {
-    width: auto;
+.Logo {
+    width: 150px;
     height: auto;
 }
 
@@ -87,19 +87,18 @@
 }
 
 .Input {
-    width: 100%;
     padding: 12px;
     margin: 5px;
     border-radius: 5px;
     background-color: #4A4540;
-    color: #816B49;
+    color: #fff;
     border: none;
     outline: none;
     font-size: 15px;
 }
 
 .Input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
+    color: #fff;
 }
 
 .Input:focus {
@@ -111,7 +110,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 90%;
 }
 
 .editaUsuario {
