@@ -75,7 +75,6 @@
     width: clamp(80px, 12vw, 150px);
     height: auto;
     max-width: 100%;
-    margin-left: 10%;
 }
 
 .davidImage {

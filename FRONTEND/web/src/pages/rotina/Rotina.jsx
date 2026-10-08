@@ -1,15 +1,15 @@
 import CalendarGrid from "../../components/Calendar/Calendar.jsx"
+import Task from "../../components/Task/Task.jsx"
 import './Rotina.css';
 
 export default function Rotina() {
     return (
         <div className="PaginaRotina">
-            <div className="agenda-left">
+            <div className="rotinaLeft">
                 <CalendarGrid />
-                {/* <ProximosCompromissos /> entra aqui depois */}
             </div>
-            <div className="agenda-right">
-                {/* <AgendaDoDia /> entra aqui depois */}
+            <div className="rotinaRight">
+                <Task />
             </div>
         </div>
     )

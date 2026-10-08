@@ -19,5 +19,5 @@ async def criar_rotina(rotina_schema: RotinaSchema, session: Session = Depends(p
         session.commit()
         return{"mensagem":"rotina criada com sucesso!!"}
     else:
-        return{"mensagem":"id não cafastrado, tente novamente"}
+        return{"mensagem":"id não cadastrado, tente novamente"}
 
