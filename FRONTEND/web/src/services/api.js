@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const apiBaseURL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 const api = axios.create({
-    baseURL: "http://localhost:8000",
+    baseURL: apiBaseURL,
     headers: { "Content-Type": "application/json" }
 });
 
@@ -27,6 +29,27 @@ export async function LoginUsuario(email, senha) {
         throw new Error(mensagem);
     }
 }
+
+export async function ObterOnboarding() {
+    try {
+        const response = await api.get("/onboarding");
+        return response.data;
+    } catch (error) {
+        const mensagem = error.response?.data?.detail || "Não foi possível carregar seu perfil financeiro";
+        throw new Error(mensagem);
+    }
+}
+
+export async function SalvarOnboarding(respostas) {
+    try {
+        const response = await api.put("/onboarding", respostas);
+        return response.data;
+    } catch (error) {
+        const mensagem = error.response?.data?.detail || "Não foi possível salvar seu perfil financeiro";
+        throw new Error(mensagem);
+    }
+}
+
 // Para enviar o token em toda requisição
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem("acess_token");
@@ -47,7 +70,7 @@ api.interceptors.response.use(
             original._retry = true;
             try {
                 const refresh = localStorage.getItem("refresh_token");
-                const { data } = await axios.get("http://localhost:8000/auth/refresh", {
+                const { data } = await axios.get(`${apiBaseURL}/auth/refresh`, {
                     headers: { Authorization: `Bearer ${refresh}` },
                 });
                 localStorage.setItem("acess_token", data.acess_token);

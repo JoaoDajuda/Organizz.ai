@@ -2,6 +2,7 @@ import "./Header.css"
 import { Outlet, NavLink } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import { Logout } from "../../services/api.js"
+import NizaChat from "../Chat/NizaChat.jsx"
 
 export default function Header() {
     const navigate = useNavigate()
@@ -35,6 +36,7 @@ export default function Header() {
             <div className="content">
                 <Outlet />
             </div>
+            <NizaChat />
         </div>
     )
 }
