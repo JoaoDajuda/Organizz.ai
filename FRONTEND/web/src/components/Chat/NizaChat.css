@@ -1,0 +1,427 @@
+.niza-chat {
+    position: fixed;
+    right: 24px;
+    bottom: 22px;
+    z-index: 50;
+    font-family: inherit;
+}
+
+.niza-chat__trigger {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 52px;
+    padding: 8px 18px 8px 10px;
+    border: 1px solid #e8dfc8;
+    border-radius: 28px;
+    background: #c9a94d;
+    color: #1b2a4a;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 22%);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.niza-chat__trigger:hover {
+    background: #ddc77f;
+}
+
+.niza-chat__trigger:focus-visible,
+.niza-chat__panel button:focus-visible,
+.niza-chat__panel input:focus-visible,
+.niza-chat__panel select:focus-visible,
+.niza-chat__panel textarea:focus-visible {
+    outline: 3px solid #247565;
+    outline-offset: 2px;
+}
+
+.niza-chat__trigger-mark {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 50%;
+    background: #1b2a4a;
+    color: #fffdf6;
+    font-family: Georgia, serif;
+    font-size: 18px;
+}
+
+.niza-chat__panel {
+    position: absolute;
+    right: 0;
+    bottom: 66px;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    width: min(400px, calc(100vw - 32px));
+    height: min(650px, calc(100dvh - 112px));
+    min-height: 390px;
+    overflow: hidden;
+    border: 1px solid #d8d0bf;
+    border-radius: 8px;
+    background: #fffdf6;
+    color: #17273f;
+    box-shadow: 0 16px 48px rgb(8 19 34 / 34%);
+    animation: niza-chat-enter 180ms ease-out both;
+}
+
+.niza-chat__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 18px;
+    background: #1b2a4a;
+    color: #fffdf6;
+}
+
+.niza-chat__header h2 {
+    margin: 2px 0;
+    font-size: 22px;
+    line-height: 1.15;
+}
+
+.niza-chat__header p:last-child {
+    color: #e8dfc8;
+    font-size: 13px;
+}
+
+.niza-chat__eyebrow {
+    color: #ddc77f;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.niza-chat__close,
+.niza-chat__edit,
+.niza-chat__secondary {
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    padding: 7px 10px;
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.niza-chat__close:hover {
+    background: rgb(255 255 255 / 12%);
+}
+
+.niza-chat__state,
+.niza-chat__onboarding,
+.niza-chat__conversation {
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.niza-chat__state {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px;
+}
+
+.niza-chat__onboarding {
+    padding: 18px;
+}
+
+.niza-chat__progress-copy {
+    margin-bottom: 7px;
+    color: #536174;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.niza-chat__progress {
+    height: 5px;
+    margin-bottom: 18px;
+    overflow: hidden;
+    border-radius: 5px;
+    background: #e6e3da;
+}
+
+.niza-chat__progress span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: #247565;
+    transition: width 180ms ease;
+}
+
+.niza-chat__fields {
+    display: grid;
+    gap: 15px;
+}
+
+.niza-chat__field {
+    display: grid;
+    gap: 7px;
+    color: #25334a;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.niza-chat__field textarea,
+.niza-chat__field select,
+.niza-chat__composer textarea {
+    width: 100%;
+    border: 1px solid #b9c0c5;
+    border-radius: 4px;
+    background: #fff;
+    color: #17273f;
+    padding: 10px;
+    font: inherit;
+    font-size: 14px;
+}
+
+.niza-chat__field textarea {
+    min-height: 76px;
+    resize: vertical;
+}
+
+.niza-chat__field select {
+    min-height: 42px;
+}
+
+.niza-chat__field textarea::placeholder,
+.niza-chat__composer textarea::placeholder {
+    color: #697583;
+}
+
+.niza-chat__radio-group {
+    grid-template-columns: 1fr 1fr;
+    border: 0;
+    padding: 0;
+}
+
+.niza-chat__radio-group legend {
+    grid-column: 1 / -1;
+    margin-bottom: 7px;
+    color: #25334a;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.niza-chat__radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 14px;
+}
+
+.niza-chat__radio-group input {
+    accent-color: #247565;
+}
+
+.niza-chat__form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 9px;
+    margin-top: 18px;
+}
+
+.niza-chat__secondary {
+    color: #1b2a4a;
+}
+
+.niza-chat__action,
+.niza-chat__send {
+    border: 1px solid #1b2a4a;
+    border-radius: 4px;
+    background: #1b2a4a;
+    color: #fffdf6;
+    padding: 10px 14px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.niza-chat__action:hover,
+.niza-chat__send:hover:not(:disabled) {
+    background: #247565;
+}
+
+.niza-chat__action:disabled,
+.niza-chat__send:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.niza-chat__privacy {
+    margin-top: 14px;
+    color: #596575;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.niza-chat__error {
+    margin: 10px 0;
+    border-left: 3px solid #b4463d;
+    background: #fff1ed;
+    color: #762d27;
+    padding: 9px 11px;
+    font-size: 13px;
+}
+
+.niza-chat__conversation {
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    overflow: hidden;
+}
+
+.niza-chat__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid #e4e0d6;
+}
+
+.niza-chat__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #596575;
+    font-size: 12px;
+}
+
+.niza-chat__status::before {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #88919b;
+    content: "";
+}
+
+.niza-chat__status--ready::before {
+    background: #247565;
+}
+
+.niza-chat__status--connecting::before {
+    background: #c9a94d;
+}
+
+.niza-chat__edit {
+    border-color: #a8b0b4;
+    color: #25334a;
+}
+
+.niza-chat__messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    padding: 16px 14px;
+}
+
+.niza-chat__welcome {
+    align-self: flex-start;
+    max-width: 90%;
+    border-radius: 8px 8px 8px 2px;
+    background: #edf2ee;
+    color: #25334a;
+    padding: 12px;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.niza-chat__welcome p + p {
+    margin-top: 6px;
+}
+
+.niza-chat__message {
+    max-width: 88%;
+    overflow-wrap: anywhere;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+}
+
+.niza-chat__message--user {
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+    background: #1b2a4a;
+    color: #fffdf6;
+}
+
+.niza-chat__message--bot {
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+    background: #edf2ee;
+    color: #17273f;
+}
+
+.niza-chat__composer {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    padding: 12px;
+    border-top: 1px solid #e4e0d6;
+    background: #fffdf6;
+}
+
+.niza-chat__composer textarea {
+    min-height: 42px;
+    max-height: 110px;
+    resize: vertical;
+}
+
+.niza-chat__send {
+    min-height: 42px;
+    padding-inline: 12px;
+}
+
+.niza-chat__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    clip-path: inset(50%);
+}
+
+@keyframes niza-chat-enter {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 520px) {
+    .niza-chat {
+        right: 12px;
+        bottom: 14px;
+    }
+
+    .niza-chat__trigger {
+        min-height: 48px;
+        padding-right: 14px;
+        font-size: 14px;
+    }
+
+    .niza-chat__panel {
+        position: fixed;
+        right: 8px;
+        bottom: 72px;
+        width: calc(100vw - 16px);
+        height: calc(100dvh - 88px);
+        min-height: 340px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .niza-chat__panel {
+        animation: none;
+    }
+
+    .niza-chat__progress span {
+        transition: none;
+    }
+}
