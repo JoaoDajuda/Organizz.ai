@@ -1,3 +1,5 @@
 venv/
+.venv/
+.dev-logs/
 __pycache__/
 *.pyc

@@ -29,7 +29,6 @@ class Usuario(SQLModel, table=True):
     codigo_recuperacao: Optional[str] = Field(default=None, max_length=6)
     codigo_recuperacao_expira: Optional[datetime] = Field(default=None)
 
-    # Relacionamentos
     agendas: list["Agenda"] = Relationship(back_populates="usuario")
     financeiros: list["Financeiro"] = Relationship(back_populates="usuario")
     transacoes: list["Transacao"] = Relationship(back_populates="usuario")
@@ -88,8 +87,7 @@ class Transacao(SQLModel, table=True):
     data_mov: datetime = Field(default_factory=datetime.utcnow)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     deleted_at: Optional[datetime] = Field(default=None)
-
-    # Relacionamentos
+    
     usuario: Optional[Usuario] = Relationship(back_populates="transacoes")
     financeiro: Optional[Financeiro] = Relationship(back_populates="transacoes")
 
