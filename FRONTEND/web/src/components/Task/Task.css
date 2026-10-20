@@ -1,35 +1,120 @@
 .container {
+    height: 450px;
+    max-height: 450px;
     width: 100%;
-    height: 50vh;
+    overflow-y: auto;
+    background-color: var(--routine-surface, #1B2A4A);
+    color: var(--routine-text, #F5F0E6);
+    border-radius: 6px;
     padding: 10px;
+    border: 1px solid var(--routine-gold, #C9A94D);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    border: 1px solid #f9780091;
-    backdrop-filter: blur(10px);
-    border-radius: 5px;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .Task {
-    width: 95%;
+    width: 90%;
+    height: auto;
+    min-height: 54px;
+    flex: 0 0 auto;
+    border-left: 1px solid #475569;
+    background-color: var(--routine-surface, #1B2A4A);
+    border-radius: 4px;
     padding: 10px;
-    display: flex;
-    flex-direction: row;
+    border: 1px solid rgba(201, 169, 77, 0.45);
+    margin-bottom: 10px;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
-    border: 1px solid #f9780091;
-    border-radius: 15px;
+    justify-self: center;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+
 }
 
 .Task:hover {
-    transform: scale(1.02);
+   
+}
+
+.TaskDayGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 0 0 auto;
+}
+
+.TaskDayTitle {
+    width: 90%;
+    margin: 12px 0 8px;
+    color: var(--routine-gold, #C9A94D);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: capitalize;
 }
 
 .TaskInput {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    font-size: 24px;
+}
+
+h1 {
+    color: black;
+}
+
+.TaskTitle {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    border-left: 4px solid #475569;
+    padding-left: 12px;
+    height: 100%;
+}
+
+.TaskTime {
+    margin-top: 3px;
+    color: var(--routine-muted, #C5CCD6);
+    font-size: 0.8rem;
+    text-decoration: none;
+}
+
+.TaskDelete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.TaskDelete:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.Confirm {
+    width: 50%;
+    justify-self: center;
+    align-self: center;
+    background-color: var(--routine-gold, #C9A94D);
+    border: 1px solid var(--routine-gold, #C9A94D);
+    color: var(--routine-surface, #1B2A4A);
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: block;
+    width: fit-content;
+    margin: 12px auto 0;
+}
+
+.Confirm:hover {
+    background-color: #dfc276;
+    border-color: #dfc276;
+}
+.Confirm:active {
+    background-color: #a8863e;
 }

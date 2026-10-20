@@ -7,12 +7,33 @@ const api = axios.create({
     headers: { "Content-Type": "application/json" }
 });
 
+function registrarFalhaApi(operacao, error) {
+    const response = error.response;
+    const detail = response?.data?.detail;
+    const safeDetail = typeof detail === "string"
+        ? detail
+        : Array.isArray(detail)
+            ? `${detail.length} erro(s) de validação`
+            : undefined;
+    const diagnostico = {
+        status: response?.status ?? "sem resposta HTTP",
+        codigo: response?.headers?.["x-error-code"] || error.code || "desconhecido",
+        requestId: response?.headers?.["x-request-id"],
+        detalhe: safeDetail,
+    };
+
+    console.error(`[API] ${operacao} falhou`, diagnostico);
+    return diagnostico;
+}
+
 export async function CadastrarUsuario(nome, email, senha) {
     try {
         const response = await api.post("auth/criar_conta", { nome, email, senha, ativo: true , admin: false });
         return response.data;
     } catch (error) {
-        const mensagem = error.response?.data?.detail || "Erro ao cadastrar";
+        const diagnostico = registrarFalhaApi("POST /auth/criar_conta", error);
+        const mensagem = diagnostico.detalhe
+            || `Não foi possível cadastrar (HTTP ${diagnostico.status}; ${diagnostico.codigo}).`;
         throw new Error(mensagem);
     }
 }
@@ -47,6 +68,45 @@ export async function SalvarOnboarding(respostas) {
     } catch (error) {
         const mensagem = error.response?.data?.detail || "Não foi possível salvar seu perfil financeiro";
         throw new Error(mensagem);
+    }
+}
+
+export async function ListarAgendas() {
+    try {
+        const response = await api.get("/agendas");
+        return response.data;
+    } catch (error) {
+        const diagnostico = registrarFalhaApi("GET /agendas", error);
+        throw new Error(diagnostico.detalhe || "Não foi possível carregar suas tarefas.");
+    }
+}
+
+export async function CriarAgenda(agenda) {
+    try {
+        const response = await api.post("/agendas", agenda);
+        return response.data;
+    } catch (error) {
+        const diagnostico = registrarFalhaApi("POST /agendas", error);
+        throw new Error(diagnostico.detalhe || "Não foi possível salvar a tarefa.");
+    }
+}
+
+export async function AtualizarStatusAgenda(idAgenda, status) {
+    try {
+        const response = await api.patch(`/agendas/${idAgenda}`, { status });
+        return response.data;
+    } catch (error) {
+        const diagnostico = registrarFalhaApi(`PATCH /agendas/${idAgenda}`, error);
+        throw new Error(diagnostico.detalhe || "Não foi possível atualizar a tarefa.");
+    }
+}
+
+export async function ExcluirAgenda(idAgenda) {
+    try {
+        await api.delete(`/agendas/${idAgenda}`);
+    } catch (error) {
+        const diagnostico = registrarFalhaApi(`DELETE /agendas/${idAgenda}`, error);
+        throw new Error(diagnostico.detalhe || "Não foi possível excluir a tarefa.");
     }
 }
 
