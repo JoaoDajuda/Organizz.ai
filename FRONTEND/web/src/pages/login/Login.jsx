@@ -24,8 +24,8 @@ export default function Login() {
             setModo("Login");
             setConfirmacao("Cadastro realizado com sucesso! Faça login para continuar.");
         } catch (error) {
-            console.error("Erro ao cadastrar usuário:", error);
-            setConfirmacao("Erro ao cadastrar usuário. Verifique os dados e tente novamente.");
+            console.error("Erro ao cadastrar usuário:", error.message);
+            setConfirmacao(error.message || "Erro ao cadastrar usuário. Verifique os dados e tente novamente.");
         }
     }
 

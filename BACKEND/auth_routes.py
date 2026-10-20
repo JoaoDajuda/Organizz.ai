@@ -1,18 +1,30 @@
 import random
 import string
+import logging
 from datetime import datetime, timedelta
+from uuid import uuid4
 from fastapi import APIRouter, Depends, HTTPException
 from main import bcrypt_context, ALGORITHM, TIMER, SECRET_KEY
 from datetime import datetime,timedelta,timezone
 from dependencies import pegar_sessao, verificar_token
 from jose import jwt,JWTError
 from sqlmodel import Session, select
+from sqlalchemy.exc import IntegrityError, OperationalError, SQLAlchemyError, StatementError
 from models import Usuario
 from fastapi.security import OAuth2PasswordRequestForm
 from schemas import UsuarioSchemas, LoginSchemas, SolicitarEmailSchema, ResetSenhaSchema
 from email_utils import enviar_email
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
+logger = logging.getLogger(__name__)
+
+
+def _database_error_code(error):
+    original_error = getattr(error, "orig", error)
+    error_args = getattr(original_error, "args", ())
+    if error_args and isinstance(error_args[0], int):
+        return error_args[0]
+    return None
 
 def gerar_recuperacao() -> str:
     """Gera uma senha aleatória de 8 caracteres contendo letras e números."""
@@ -44,16 +56,113 @@ def autenticar_usuario(email, senha, session,):
 @auth_router.post("/criar_conta")
 async def criar_conta(usuarioschemas: UsuarioSchemas, session: Session = Depends(pegar_sessao)):
     """essa rota é responsavel pela criação de usuário e comparação de email no banco de dados"""
-    usuario = session.query(Usuario).filter(Usuario.email == usuarioschemas.email).first()
-    if usuario:
-        raise HTTPException(status_code=400, detail="email já cadastrado")
-    else:
+    request_id = uuid4().hex[:12]
+    try:
+        usuario = session.query(Usuario).filter(Usuario.email == usuarioschemas.email).first()
+        if usuario:
+            logger.warning("Cadastro recusado: email duplicado (request_id=%s)", request_id)
+            raise HTTPException(
+                status_code=400,
+                detail="Email já cadastrado.",
+                headers={
+                    "X-Request-ID": request_id,
+                    "X-Error-Code": "email_already_registered",
+                },
+            )
+
         criptografia = bcrypt_context.hash(usuarioschemas.senha)
-        novo_usuario = Usuario(nome=usuarioschemas.nome,email=usuarioschemas.email,senha=criptografia, emailrec=usuarioschemas.emailrec,
+        novo_usuario = Usuario(
+            nome=usuarioschemas.nome,
+            email=usuarioschemas.email,
+            senha=criptografia,
+            emailrec=usuarioschemas.emailrec,
         )
         session.add(novo_usuario)
-        session.commit() 
-        return{"mensagem":"email cadastrado com sucesso!"}
+        session.commit()
+        logger.info("Cadastro concluído (request_id=%s)", request_id)
+        return {"mensagem": "email cadastrado com sucesso!"}
+    except HTTPException:
+        raise
+    except IntegrityError as error:
+        session.rollback()
+        error_code = _database_error_code(error)
+        logger.warning(
+            "Conflito de integridade no cadastro (request_id=%s, driver=%s, codigo=%s)",
+            request_id,
+            type(getattr(error, "orig", error)).__name__,
+            error_code,
+        )
+        raise HTTPException(
+            status_code=409,
+            detail="Cadastro em conflito com um registro existente.",
+            headers={
+                "X-Request-ID": request_id,
+                "X-Error-Code": "integrity_conflict",
+            },
+        ) from error
+    except OperationalError as error:
+        session.rollback()
+        error_code = _database_error_code(error)
+        logger.error(
+            "Banco indisponível no cadastro (request_id=%s, driver=%s, codigo=%s)",
+            request_id,
+            type(getattr(error, "orig", error)).__name__,
+            error_code,
+        )
+        raise HTTPException(
+            status_code=503,
+            detail="Banco indisponível para concluir o cadastro.",
+            headers={
+                "X-Request-ID": request_id,
+                "X-Error-Code": "database_error",
+            },
+        ) from error
+    except StatementError as error:
+        session.rollback()
+        root_error = getattr(error, "orig", error)
+        logger.error(
+            "Dados inválidos para persistência no cadastro (request_id=%s, tipo=%s)",
+            request_id,
+            type(root_error).__name__,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail="Não foi possível preparar os dados do cadastro.",
+            headers={
+                "X-Request-ID": request_id,
+                "X-Error-Code": "database_value_error",
+            },
+        ) from error
+    except SQLAlchemyError as error:
+        session.rollback()
+        logger.error(
+            "Falha SQLAlchemy no cadastro (request_id=%s, tipo=%s)",
+            request_id,
+            type(getattr(error, "orig", error)).__name__,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail="Não foi possível salvar o cadastro.",
+            headers={
+                "X-Request-ID": request_id,
+                "X-Error-Code": "database_operation_error",
+            },
+        ) from error
+    except Exception as error:
+        session.rollback()
+        logger.error(
+            "Falha inesperada no cadastro (request_id=%s, tipo=%s)",
+            request_id,
+            type(error).__name__,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail="Erro interno ao concluir o cadastro.",
+            headers={
+                "X-Request-ID": request_id,
+                "X-Error-Code": "internal_error",
+            },
+        ) from error
 
 @auth_router.post("/fazer_login")
 async def login(loginSchema: LoginSchemas, session: Session= Depends(pegar_sessao)):

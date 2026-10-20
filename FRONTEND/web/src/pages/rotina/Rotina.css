@@ -17,10 +17,6 @@
   font-family: var(--font-body, 'Cormorant Garamond', serif);
 }
 
-.fc .fc-scroller {
-  overflow: visible !important;
-}
-
 .fc .fc-daygrid-body {
   overflow: visible !important;
 }
@@ -85,31 +81,35 @@
 }
 
 .PaginaRotina {
-  display: flex;
-  align-items: flex-start;
+  --routine-surface: #1B2A4A;
+  --routine-gold: #C9A94D;
+  --routine-text: #F5F0E6;
+  --routine-muted: #C5CCD6;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.rotinaTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.9fr);
+  align-items: start;
+  gap: 20px;
+  width: 100%;
 }
 
 .rotinaLeft {
-  flex: 1 1 520px;
-  min-width: 360px;
-  max-width: 640px;  
+  min-width: 0;
 }
 
 .rotinaRight {
-  flex: 1 1 320px;
   min-width: 0;
-  padding: 20px;
-  margin-top: 10vh;
+  padding: 0;
 }
 
 @media (max-width: 900px) {
-  .PaginaRotina {
-    flex-direction: column;
-  }
-  .rotinaLeft,
-  .rotinaRight {
-    flex: 1 1 auto;
-    width: 100%;
-    max-width: none;
+  .rotinaTop {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

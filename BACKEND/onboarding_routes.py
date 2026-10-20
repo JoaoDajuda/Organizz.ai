@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends
-from sqlmodel import Session, select
+from sqlalchemy.orm import Session
 
 from dependencies import pegar_sessao, verificar_token
 from models import PerfilOnboarding, Usuario
@@ -15,8 +15,8 @@ async def obter_onboarding(
     usuario: Usuario = Depends(verificar_token),
     session: Session = Depends(pegar_sessao),
 ):
-    perfil = session.exec(
-        select(PerfilOnboarding).where(PerfilOnboarding.id_usuario == usuario.id_usuario)
+    perfil = session.query(PerfilOnboarding).filter(
+        PerfilOnboarding.id_usuario == usuario.id_usuario
     ).first()
     if perfil is None:
         return EstadoOnboardingSchema(completed=False)
@@ -33,8 +33,8 @@ async def salvar_onboarding(
     usuario: Usuario = Depends(verificar_token),
     session: Session = Depends(pegar_sessao),
 ):
-    perfil = session.exec(
-        select(PerfilOnboarding).where(PerfilOnboarding.id_usuario == usuario.id_usuario)
+    perfil = session.query(PerfilOnboarding).filter(
+        PerfilOnboarding.id_usuario == usuario.id_usuario
     ).first()
     dados = respostas.dict()
 

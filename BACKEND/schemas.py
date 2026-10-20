@@ -38,6 +38,30 @@ class RotinaSchema(BaseModel):
     class Config:
         from_attributes = True
 
+
+class AgendaCreateSchema(BaseModel):
+    titulo: str = SchemaField(min_length=1, max_length=200)
+    data: str = SchemaField(min_length=1, max_length=64)
+    data_fim: Optional[str] = SchemaField(default=None, max_length=64)
+    dia_inteiro: bool = False
+
+
+class AgendaStatusSchema(BaseModel):
+    status: Literal["pendente", "concluida", "atrasada"]
+
+
+class AgendaResponseSchema(BaseModel):
+    id_agenda: int
+    titulo: str
+    data: str
+    data_fim: Optional[str] = None
+    dia_inteiro: bool
+    status: Literal["pendente", "concluida", "atrasada"]
+
+    class Config:
+        from_attributes = True
+
+
 class SolicitarEmailSchema(BaseModel):
     email: EmailStr
 

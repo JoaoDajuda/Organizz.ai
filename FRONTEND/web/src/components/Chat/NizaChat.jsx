@@ -268,12 +268,13 @@ export default function NizaChat() {
             <button
                 type="button"
                 className="niza-chat__trigger"
+                aria-label={open ? "Fechar chat da Niza" : "Abrir chat da Niza"}
                 aria-expanded={open}
                 aria-controls="niza-chat-dialog"
+                title={open ? "Fechar chat da Niza" : "Abrir chat da Niza"}
                 onClick={alternarChat}
             >
                 <span className="niza-chat__trigger-mark" aria-hidden="true">N</span>
-                <span>{open ? "Fechar Niza" : "Conversar com Niza"}</span>
             </button>
 
             {open && (

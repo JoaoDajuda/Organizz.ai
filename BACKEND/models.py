@@ -24,14 +24,12 @@ class Usuario(SQLModel, table=True):
     emailrec: Optional[str] = Field(default=None, max_length=200)
     ativo: bool = Field(default=True)
     admin: bool = Field(default=False)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     deleted_at: Optional[datetime] = Field(default=None)
     codigo_recuperacao: Optional[str] = Field(default=None, max_length=6)
     codigo_recuperacao_expira: Optional[datetime] = Field(default=None)
 
     agendas: list["Agenda"] = Relationship(back_populates="usuario")
-    financeiros: list["Financeiro"] = Relationship(back_populates="usuario")
-    transacoes: list["Transacao"] = Relationship(back_populates="usuario")
     valores: list["Valores"] = Relationship(back_populates="usuario")
     perfil_onboarding: Optional["PerfilOnboarding"] = Relationship(back_populates="usuario")
 
@@ -50,6 +48,7 @@ class PerfilOnboarding(SQLModel, table=True):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
+    # Relacionamento
     usuario: Optional[Usuario] = Relationship(back_populates="perfil_onboarding")
 
 
@@ -58,42 +57,19 @@ class Agenda(SQLModel, table=True):
     id_usuario: int = Field(foreign_key="usuario.id_usuario", index=True)
     titulo: str = Field(max_length=200)
     data: str = Field()
+    data_fim: Optional[str] = Field(default=None, max_length=64)
+    dia_inteiro: bool = Field(default=False)
     status: StatusAgenda = Field(default=StatusAgenda.pendente)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     deleted_at: Optional[datetime] = Field(default=None)
 
     # Relacionamento
     usuario: Optional[Usuario] = Relationship(back_populates="agendas")
 
-
-class Financeiro(SQLModel, table=True):
-    id_financeiro: Optional[int] = Field(default=None, primary_key=True)
-    id_usuario: int = Field(foreign_key="usuario.id_usuario", index=True)
-    saldo: float = Field(default=0.0)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    deleted_at: Optional[datetime] = Field(default=None)
-
-    # Relacionamentos
-    usuario: Optional[Usuario] = Relationship(back_populates="financeiros")
-    transacoes: list["Transacao"] = Relationship(back_populates="financeiro")
-
-
-class Transacao(SQLModel, table=True):
-    id_transacoes: Optional[int] = Field(default=None, primary_key=True)
-    id_usuario: int = Field(foreign_key="usuario.id_usuario", index=True)
-    id_financeiro: int = Field(foreign_key="financeiro.id_financeiro", index=True)
-    valor: float = Field()
-    tipo: TipoTransacao
-    data_mov: datetime = Field(default_factory=datetime.utcnow)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    deleted_at: Optional[datetime] = Field(default=None)
-    
-    usuario: Optional[Usuario] = Relationship(back_populates="transacoes")
-    financeiro: Optional[Financeiro] = Relationship(back_populates="transacoes")
-
 class Valores(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     id_usuario: int = Field(foreign_key="usuario.id_usuario", index=True)
+    tipo_valor: TipoTransacao = Field()
     valor: float = Field()
     saldo: Optional[float] = Field(default=0.0)
     data_movimentacao: datetime = Field(default_factory=datetime.utcnow)
