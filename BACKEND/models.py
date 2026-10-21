@@ -1,7 +1,7 @@
 from typing import Optional
 from sqlmodel import Field, SQLModel, Relationship
 from enum import Enum
-from datetime import datetime
+from datetime import datetime, timezone
 
 # ENUMS
 class StatusAgenda(str, Enum):
@@ -24,7 +24,7 @@ class Usuario(SQLModel, table=True):
     emailrec: Optional[str] = Field(default=None, max_length=200)
     ativo: bool = Field(default=True)
     admin: bool = Field(default=False)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     deleted_at: Optional[datetime] = Field(default=None)
     codigo_recuperacao: Optional[str] = Field(default=None, max_length=6)
     codigo_recuperacao_expira: Optional[datetime] = Field(default=None)
@@ -42,7 +42,7 @@ class Agenda(SQLModel, table=True):
     titulo: str = Field(max_length=200)
     data: str = Field()
     status: StatusAgenda = Field(default=StatusAgenda.pendente)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     deleted_at: Optional[datetime] = Field(default=None)
 
     # Relacionamento
@@ -53,7 +53,7 @@ class Financeiro(SQLModel, table=True):
     id_financeiro: Optional[int] = Field(default=None, primary_key=True)
     id_usuario: int = Field(foreign_key="usuario.id_usuario", index=True)
     saldo: float = Field(default=0.0)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     deleted_at: Optional[datetime] = Field(default=None)
 
     # Relacionamentos
@@ -67,8 +67,8 @@ class Transacao(SQLModel, table=True):
     id_financeiro: int = Field(foreign_key="financeiro.id_financeiro", index=True)
     valor: float = Field()
     tipo: TipoTransacao
-    data_mov: datetime = Field(default_factory=datetime.utcnow)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    data_mov: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     deleted_at: Optional[datetime] = Field(default=None)
 
     # Relacionamentos
@@ -80,6 +80,6 @@ class Valores(SQLModel, table=True):
     id_usuario: int = Field(foreign_key="usuario.id_usuario", index=True)
     valor: float = Field()
     saldo: Optional[float] = Field(default=0.0)
-    data_movimentacao: datetime = Field(default_factory=datetime.utcnow)
+    data_movimentacao: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     usuario: Optional[Usuario] = Relationship(back_populates="valores")
