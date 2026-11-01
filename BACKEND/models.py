@@ -49,7 +49,7 @@ class PerfilOnboarding(SQLModel, table=True):
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     # Relacionamento
-    usuario : Optional[Usuario] = Relationship(back_populates="perfil_onboarding")
+    usuario: Optional[Usuario] = Relationship(back_populates="perfil_onboarding")
 
 
 class Agenda(SQLModel, table=True):

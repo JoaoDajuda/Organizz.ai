@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { toast } from 'react-toastify';
+import { useState } from 'react';
 import './fullcalendar-overrides.css';
 
 const MINUTOS_NO_DIA = 24 * 60;
@@ -186,6 +186,8 @@ function chaveDataLocal(data) {
 }
 
 function CalendarGrid({ agendas, onCreateAgenda, onDeleteAgenda, onDataSelect }) {
+  const [error, setError] = useState('');
+
   const events = agendas.map((agenda) => ({
     id: String(agenda.id_agenda),
     title: agenda.titulo,
@@ -199,6 +201,7 @@ function CalendarGrid({ agendas, onCreateAgenda, onDeleteAgenda, onDataSelect })
     const titulo = prompt('Título do evento:')?.trim();
     if (!titulo) return;
 
+    setError('');
     try {
       await onCreateAgenda({
         titulo,
@@ -207,22 +210,24 @@ function CalendarGrid({ agendas, onCreateAgenda, onDeleteAgenda, onDataSelect })
         dia_inteiro: info.allDay,
       });
     } catch (requestError) {
-      toast.error(requestError.message || 'Não foi possível salvar a tarefa.');
+      setError(requestError.message || 'Não foi possível salvar a tarefa.');
     }
   };
 
   const handleEventClick = async (info) => {
     if (confirm(`Remover "${info.event.title}"?`)) {
+      setError('');
       try {
         await onDeleteAgenda(info.event.id);
       } catch (requestError) {
-        toast.error(requestError.message || 'Não foi possível excluir a tarefa.');
+        setError(requestError.message || 'Não foi possível excluir a tarefa.');
       }
     }
   };
 
   return (
     <div className="calendar-wrapper">
+      {error && <p role="alert">{error}</p>}
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         height={450}

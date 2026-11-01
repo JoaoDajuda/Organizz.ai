@@ -48,7 +48,7 @@ export default function Login() {
         try {
             await EsqueciSenha(email);
             console.log(`Email de recuperação enviado para ${email}`)
-            setModo("RedefinirSenha");ç
+            setModo("RedefinirSenha");
             setConfirmacao("Se o email estiver cadastrado, você receberá um código em instantes.");
         } catch (error) {
             toast.error(error.message || "Não foi possível solicitar a redefinição de senha.");

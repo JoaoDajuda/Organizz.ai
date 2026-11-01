@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { toast } from "react-toastify"
 import CalendarGrid, { DayUsageDashboard } from "../../components/Calendar/Calendar.jsx"
 import Task from "../../components/Task/Task.jsx"
 import {
@@ -18,6 +17,7 @@ function dataAtualLocal() {
 export default function Rotina() {
     const [agendas, setAgendas] = useState([])
     const [carregando, setCarregando] = useState(true)
+    const [erro, setErro] = useState("")
     const [dataSelecionada, setDataSelecionada] = useState(dataAtualLocal)
 
     useEffect(() => {
@@ -28,7 +28,7 @@ export default function Rotina() {
                 if (ativo) setAgendas(dados)
             })
             .catch((error) => {
-                if (ativo) toast.error(error.message || "Não foi possível carregar suas tarefas.", { toastId: "rotina-load-error" })
+                if (ativo) setErro(error.message || "Não foi possível carregar suas tarefas.")
             })
             .finally(() => {
                 if (ativo) setCarregando(false)
@@ -70,6 +70,7 @@ export default function Rotina() {
                 </div>
                 <div className="rotinaRight">
                     {carregando && <p role="status">Carregando tarefas...</p>}
+                    {erro && <p role="alert">{erro}</p>}
                     <Task
                         agendas={agendas}
                         onUpdateStatus={atualizarStatus}
