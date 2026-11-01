@@ -1,4 +1,4 @@
-"""add codigo recuperacao ao usuario
+git log --all -S"class Valores" --oneline -- BACKEND/models.py"""add codigo recuperacao ao usuario
 
 Revision ID: 70055d0afa2d
 Revises: eb5e03a7f1b2

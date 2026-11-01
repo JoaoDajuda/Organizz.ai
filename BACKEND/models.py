@@ -1,7 +1,7 @@
 from typing import Optional
 from sqlmodel import Field, SQLModel, Relationship
 from enum import Enum
-from datetime import datetime
+from datetime import datetime, timezone
  
 # ENUMS
 class StatusAgenda(str, Enum):
@@ -74,3 +74,14 @@ class Transacao(SQLModel, table=True):
     # Relacionamentos
     usuario: Optional[Usuario] = Relationship(back_populates="transacoes")
     financeiro: Optional[Financeiro] = Relationship(back_populates="transacoes")
+
+class Valores(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    id_usuario: int = Field(foreign_key="usuario.id_usuario", index=True)
+    valor: float = Field()
+    saldo: Optional[float] = Field(default=0.0)
+    data_movimentacao: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc)
+    )
+
+    usuario: Optional[Usuario] = Relationship(back_populates="valores")
