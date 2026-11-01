@@ -1,0 +1,95 @@
+[1mdiff --git a/BACKEND/alembic/env.py b/BACKEND/alembic/env.py[m
+[1mindex 36112a3..4db4d99 100644[m
+[1m--- a/BACKEND/alembic/env.py[m
+[1m+++ b/BACKEND/alembic/env.py[m
+[36m@@ -4,6 +4,8 @@[m [mfrom sqlalchemy import engine_from_config[m
+ from sqlalchemy import pool[m
+ [m
+ from alembic import context[m
+[32m+[m[32mfrom sqlmodel import SQLModel[m
+[32m+[m[32mimport models[m
+ [m
+ # this is the Alembic Config object, which provides[m
+ # access to the values within the .ini file in use.[m
+[36m@@ -18,7 +20,7 @@[m [mif config.config_file_name is not None:[m
+ # for 'autogenerate' support[m
+ # from myapp import mymodel[m
+ # target_metadata = mymodel.Base.metadata[m
+[31m-target_metadata = None[m
+[32m+[m[32mtarget_metadata = SQLModel.metadata[m
+ [m
+ # other values from the config, defined by the needs of env.py,[m
+ # can be acquired:[m
+[1mdiff --git a/BACKEND/database.py b/BACKEND/database.py[m
+[1mindex ff137b2..e99f5d0 100644[m
+[1m--- a/BACKEND/database.py[m
+[1m+++ b/BACKEND/database.py[m
+[36m@@ -2,5 +2,6 @@[m [mfrom sqlmodel import create_engine[m
+ [m
+ # Mesma URL usada no alembic.ini (sqlalchemy.url).[m
+ # Se um dia mudar usuário/senha/host do banco, troque aqui E no alembic.ini.[m
+[31m-DATABASE_URL = "mysql+pymysql://root:BewareTheWater@localhost:3306/organizzai"[m
+[32m+[m[32mDATABASE_URL = "mysql+pymysql://dbeaver_user:BewareTheWater@127.0.0.1:3306/organizz_ai"[m
+[32m+[m
+ engine = create_engine(DATABASE_URL, echo=True)[m
+\ No newline at end of file[m
+[1mdiff --git a/BACKEND/models.py b/BACKEND/models.py[m
+[1mindex 041dc92..f265e10 100644[m
+[1m--- a/BACKEND/models.py[m
+[1m+++ b/BACKEND/models.py[m
+[36m@@ -1,7 +1,7 @@[m
+ from typing import Optional[m
+ from sqlmodel import Field, SQLModel, Relationship[m
+ from enum import Enum[m
+[31m-from datetime import datetime[m
+[32m+[m[32mfrom datetime import datetime, timezone[m
+ [m
+ # ENUMS[m
+ class StatusAgenda(str, Enum):[m
+[36m@@ -24,7 +24,7 @@[m [mclass Usuario(SQLModel, table=True):[m
+     emailrec: Optional[str] = Field(default=None, max_length=200)[m
+     ativo: bool = Field(default=True)[m
+     admin: bool = Field(default=False)[m
+[31m-    created_at: datetime = Field(default_factory=datetime.utcnow)[m
+[32m+[m[32m    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))[m
+     deleted_at: Optional[datetime] = Field(default=None)[m
+     codigo_recuperacao: Optional[str] = Field(default=None, max_length=6)[m
+     codigo_recuperacao_expira: Optional[datetime] = Field(default=None)[m
+[36m@@ -42,7 +42,7 @@[m [mclass Agenda(SQLModel, table=True):[m
+     titulo: str = Field(max_length=200)[m
+     data: str = Field()[m
+     status: StatusAgenda = Field(default=StatusAgenda.pendente)[m
+[31m-    created_at: datetime = Field(default_factory=datetime.utcnow)[m
+[32m+[m[32m    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))[m
+     deleted_at: Optional[datetime] = Field(default=None)[m
+ [m
+     # Relacionamento[m
+[36m@@ -53,7 +53,7 @@[m [mclass Financeiro(SQLModel, table=True):[m
+     id_financeiro: Optional[int] = Field(default=None, primary_key=True)[m
+     id_usuario: int = Field(foreign_key="usuario.id_usuario", index=True)[m
+     saldo: float = Field(default=0.0)[m
+[31m-    created_at: datetime = Field(default_factory=datetime.utcnow)[m
+[32m+[m[32m    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))[m
+     deleted_at: Optional[datetime] = Field(default=None)[m
+ [m
+     # Relacionamentos[m
+[36m@@ -67,8 +67,8 @@[m [mclass Transacao(SQLModel, table=True):[m
+     id_financeiro: int = Field(foreign_key="financeiro.id_financeiro", index=True)[m
+     valor: float = Field()[m
+     tipo: TipoTransacao[m
+[31m-    data_mov: datetime = Field(default_factory=datetime.utcnow)[m
+[31m-    created_at: datetime = Field(default_factory=datetime.utcnow)[m
+[32m+[m[32m    data_mov: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))[m
+[32m+[m[32m    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))[m
+     deleted_at: Optional[datetime] = Field(default=None)[m
+ [m
+     # Relacionamentos[m
+[36m@@ -80,6 +80,6 @@[m [mclass Valores(SQLModel, table=True):[m
+     id_usuario: int = Field(foreign_key="usuario.id_usuario", index=True)[m
+     valor: float = Field()[m
+     saldo: Optional[float] = Field(default=0.0)[m
+[31m-    data_movimentacao: datetime = Field(default_factory=datetime.utcnow)[m
+[32m+[m[32m    data_movimentacao: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))[m
+ [m
+     usuario: Optional[Usuario] = Relationship(back_populates="valores")[m
+\ No newline at end of file[m
