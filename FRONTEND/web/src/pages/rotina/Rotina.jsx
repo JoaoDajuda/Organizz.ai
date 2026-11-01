@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { toast } from "react-toastify"
 import CalendarGrid, { DayUsageDashboard } from "../../components/Calendar/Calendar.jsx"
 import Task from "../../components/Task/Task.jsx"
 import {
@@ -17,7 +18,6 @@ function dataAtualLocal() {
 export default function Rotina() {
     const [agendas, setAgendas] = useState([])
     const [carregando, setCarregando] = useState(true)
-    const [erro, setErro] = useState("")
     const [dataSelecionada, setDataSelecionada] = useState(dataAtualLocal)
 
     useEffect(() => {
@@ -28,7 +28,7 @@ export default function Rotina() {
                 if (ativo) setAgendas(dados)
             })
             .catch((error) => {
-                if (ativo) setErro(error.message)
+                if (ativo) toast.error(error.message || "Não foi possível carregar suas tarefas.", { toastId: "rotina-load-error" })
             })
             .finally(() => {
                 if (ativo) setCarregando(false)
@@ -40,39 +40,21 @@ export default function Rotina() {
     }, [])
 
     async function criarAgenda(dados) {
-        setErro("")
-        try {
-            const criada = await CriarAgenda(dados)
-            setAgendas((atuais) => [...atuais, criada])
-            return criada
-        } catch (error) {
-            setErro(error.message)
-            throw error
-        }
+        const criada = await CriarAgenda(dados)
+        setAgendas((atuais) => [...atuais, criada])
+        return criada
     }
 
     async function atualizarStatus(idAgenda, status) {
-        setErro("")
-        try {
-            const atualizada = await AtualizarStatusAgenda(idAgenda, status)
-            setAgendas((atuais) => atuais.map((agenda) => (
-                agenda.id_agenda === atualizada.id_agenda ? atualizada : agenda
-            )))
-        } catch (error) {
-            setErro(error.message)
-            throw error
-        }
+        const atualizada = await AtualizarStatusAgenda(idAgenda, status)
+        setAgendas((atuais) => atuais.map((agenda) => (
+            agenda.id_agenda === atualizada.id_agenda ? atualizada : agenda
+        )))
     }
 
     async function excluirAgenda(idAgenda) {
-        setErro("")
-        try {
-            await ExcluirAgenda(idAgenda)
-            setAgendas((atuais) => atuais.filter((agenda) => agenda.id_agenda !== Number(idAgenda)))
-        } catch (error) {
-            setErro(error.message)
-            throw error
-        }
+        await ExcluirAgenda(idAgenda)
+        setAgendas((atuais) => atuais.filter((agenda) => agenda.id_agenda !== Number(idAgenda)))
     }
 
     return (
@@ -88,7 +70,6 @@ export default function Rotina() {
                 </div>
                 <div className="rotinaRight">
                     {carregando && <p role="status">Carregando tarefas...</p>}
-                    {erro && <p role="alert">{erro}</p>}
                     <Task
                         agendas={agendas}
                         onUpdateStatus={atualizarStatus}

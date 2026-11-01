@@ -3,3 +3,4 @@ venv/
 .dev-logs/
 __pycache__/
 *.pyc
+.env

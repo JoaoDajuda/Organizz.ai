@@ -2,6 +2,7 @@ import './Task.css';
 import { LuCircleAlert, LuCheckCheck } from "react-icons/lu";
 import { FaTrash } from "react-icons/fa";
 import { useState } from 'react';
+import { toast } from "react-toastify";
 
 function formatarData(data) {
     if (data === "sem-data") return "Data não definida";
@@ -45,7 +46,6 @@ function formatarHorario(agenda) {
 
 export default function Task({ agendas, onUpdateStatus, onDeleteAgenda }) {
     const [proceed, setProceed] = useState(false);
-    const [error, setError] = useState("");
     const agendasPorDia = agendas.reduce((grupos, agenda) => {
         const data = typeof agenda.data === "string" ? agenda.data.slice(0, 10) : "";
         const chave = /^\d{4}-\d{2}-\d{2}$/.test(data) ? data : "sem-data";
@@ -60,23 +60,21 @@ export default function Task({ agendas, onUpdateStatus, onDeleteAgenda }) {
     });
 
     async function alternarStatus(agenda) {
-        setError("");
         try {
             await onUpdateStatus(
                 agenda.id_agenda,
                 agenda.status === "concluida" ? "pendente" : "concluida",
             );
         } catch (requestError) {
-            setError(requestError.message);
+            toast.error(requestError.message || "Não foi possível atualizar a tarefa.");
         }
     }
 
     async function excluir(agenda) {
-        setError("");
         try {
             await onDeleteAgenda(agenda.id_agenda);
         } catch (requestError) {
-            setError(requestError.message);
+            toast.error(requestError.message || "Não foi possível excluir a tarefa.");
         }
     }
 
@@ -120,7 +118,6 @@ export default function Task({ agendas, onUpdateStatus, onDeleteAgenda }) {
                     })}
                 </section>
             ))}
-            {error && <p role="alert">{error}</p>}
             <button className="Confirm" onClick={() => setProceed(!proceed)}>
                 {proceed ? "Sair do modo de edição" : "Modificar"}
             </button>

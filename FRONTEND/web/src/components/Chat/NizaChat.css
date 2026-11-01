@@ -261,15 +261,6 @@
     line-height: 1.4;
 }
 
-.niza-chat__error {
-    margin: 10px 0;
-    border-left: 3px solid #b4463d;
-    background: #fff1ed;
-    color: #762d27;
-    padding: 9px 11px;
-    font-size: 13px;
-}
-
 .niza-chat__conversation {
     display: grid;
     grid-template-rows: auto auto minmax(0, 1fr) auto;

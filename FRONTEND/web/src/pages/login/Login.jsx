@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./Login.css"
 import { CadastrarUsuario, LoginUsuario, EsqueciSenha, RedefinirSenha } from "../../services/api.js";
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify";
 
 export default function Login() {
     const [nome, setNome] = useState(""); //Cadastro
@@ -18,6 +19,7 @@ export default function Login() {
     const navigate = useNavigate()
 
     const FazerCadastro = async () => {
+        setConfirmacao("");
         try {
             const response = await CadastrarUsuario(nome, criarEmail, criarSenha);
             console.log("Usuário cadastrado com sucesso:", response);
@@ -25,35 +27,38 @@ export default function Login() {
             setConfirmacao("Cadastro realizado com sucesso! Faça login para continuar.");
         } catch (error) {
             console.error("Erro ao cadastrar usuário:", error.message);
-            setConfirmacao(error.message || "Erro ao cadastrar usuário. Verifique os dados e tente novamente.");
+            toast.error(error.message || "Erro ao cadastrar usuário. Verifique os dados e tente novamente.");
         }
     }
 
     const FazerLogin = async () => {
+        setConfirmacao("");
         try {
             const reponse = await LoginUsuario(email, senha);
             console.log("Login realizado com sucesso:", reponse);
             navigate("/app");
         } catch (error) {
             console.error("Erro ao fazer login:", error);
-            setConfirmacao("Erro ao fazer login. Verifique suas credenciais e tente novamente.");
+            toast.error("Erro ao fazer login. Verifique suas credenciais e tente novamente.");
         }
     }
 
     const EsqueceuSenha = async () => {
+        setConfirmacao("");
         try {
             await EsqueciSenha(email);
             console.log(`Email de recuperação enviado para ${email}`)
             setModo("RedefinirSenha");ç
             setConfirmacao("Se o email estiver cadastrado, você receberá um código em instantes.");
         } catch (error) {
-            setConfirmacao(error.message);
+            toast.error(error.message || "Não foi possível solicitar a redefinição de senha.");
         }
     }
 
     const FazerRedefinicao = async () => {
+        setConfirmacao("");
         if (senhaReset !== confirmaSenhaReset) {
-            setConfirmacao("As senhas não coincidem.");
+            toast.error("As senhas não coincidem.");
             return;
         }
         try {
@@ -66,7 +71,7 @@ export default function Login() {
             console.log("Senha redefinida com sucesso");
         } catch (error) {
             console.log("Erro ao redefinir a senha: ", error);
-            setConfirmacao(error.message);
+            toast.error(error.message || "Não foi possível redefinir sua senha.");
         }
     }
 

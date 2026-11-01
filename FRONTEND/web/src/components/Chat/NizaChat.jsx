@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { toast } from "react-toastify"
 import { ObterOnboarding, SalvarOnboarding } from "../../services/api.js"
 import "./NizaChat.css"
 
@@ -52,10 +53,7 @@ export default function NizaChat() {
     const [step, setStep] = useState(0)
     const [form, setForm] = useState(EMPTY_PROFILE)
     const [saving, setSaving] = useState(false)
-    const [formError, setFormError] = useState("")
-    const [loadError, setLoadError] = useState("")
     const [socketStatus, setSocketStatus] = useState("closed")
-    const [connectionError, setConnectionError] = useState("")
     const [messages, setMessages] = useState([])
     const [draft, setDraft] = useState("")
     const [generating, setGenerating] = useState(false)
@@ -73,7 +71,6 @@ export default function NizaChat() {
                 setForm(perfilParaFormulario(state.profile))
                 if (state.completed) {
                     setSocketStatus("connecting")
-                    setConnectionError("")
                     setView("chat")
                 } else {
                     setView("onboarding")
@@ -81,7 +78,7 @@ export default function NizaChat() {
             })
             .catch((error) => {
                 if (cancelled) return
-                setLoadError(mensagemErro(error, "Não foi possível carregar o onboarding."))
+                toast.error(mensagemErro(error, "Não foi possível carregar o onboarding."), { toastId: "niza-load-error" })
                 setView("error")
             })
 
@@ -110,13 +107,13 @@ export default function NizaChat() {
             try {
                 data = JSON.parse(event.data)
             } catch {
-                setConnectionError("O bot enviou uma resposta inválida.")
+                toast.error("O bot enviou uma resposta inválida.", { toastId: "niza-invalid-response" })
                 return
             }
 
             if (data.type === "authenticated") {
                 setSocketStatus("ready")
-                setConnectionError("")
+                toast.dismiss("niza-connection-error")
             } else if (data.type === "start") {
                 setGenerating(true)
                 setMessages((current) => [
@@ -140,13 +137,13 @@ export default function NizaChat() {
                             : message
                     )))
                 } else {
-                    setConnectionError(data.detail || "Não foi possível iniciar a conversa.")
+                    toast.error(data.detail || "Não foi possível iniciar a conversa.")
                 }
             }
         }
 
         socket.onerror = () => {
-            if (!disposed) setConnectionError("Não foi possível conectar ao serviço da Niza.")
+            if (!disposed) toast.error("Não foi possível conectar ao serviço da Niza.", { toastId: "niza-connection-error" })
         }
 
         socket.onclose = (event) => {
@@ -154,13 +151,13 @@ export default function NizaChat() {
             setSocketStatus("closed")
             setGenerating(false)
             if (event.code === 4401) {
-                setConnectionError("Sua sessão expirou. Entre novamente para continuar.")
+                toast.error("Sua sessão expirou. Entre novamente para continuar.", { toastId: "niza-connection-error" })
             } else if (event.code === 4403) {
-                setConnectionError("Conclua seu perfil financeiro para iniciar a conversa.")
+                toast.error("Conclua seu perfil financeiro para iniciar a conversa.", { toastId: "niza-connection-error" })
             } else if (event.code === 1013) {
-                setConnectionError("O backend está indisponível. Tente novamente em instantes.")
+                toast.error("O backend está indisponível. Tente novamente em instantes.", { toastId: "niza-connection-error" })
             } else if (event.code !== 1000) {
-                setConnectionError("A conexão com a Niza foi encerrada.")
+                toast.error("A conexão com a Niza foi encerrada.", { toastId: "niza-connection-error" })
             }
         }
 
@@ -191,7 +188,12 @@ export default function NizaChat() {
 
     async function enviarOnboarding(event) {
         event.preventDefault()
-        setFormError("")
+        if (!event.currentTarget.checkValidity()) {
+            const campoInvalido = event.currentTarget.querySelector(":invalid")
+            toast.error(campoInvalido?.validationMessage || "Verifique os campos obrigatórios.")
+            campoInvalido?.focus()
+            return
+        }
         if (step === 0) {
             setStep(1)
             return
@@ -207,10 +209,9 @@ export default function NizaChat() {
             setForm(perfilParaFormulario(state.profile))
             setMessages([])
             setSocketStatus("connecting")
-            setConnectionError("")
             setView("chat")
         } catch (error) {
-            setFormError(mensagemErro(error, "Não foi possível salvar suas respostas."))
+            toast.error(mensagemErro(error, "Não foi possível salvar suas respostas."))
         } finally {
             setSaving(false)
         }
@@ -243,7 +244,6 @@ export default function NizaChat() {
 
     function editarPerfil() {
         setStep(0)
-        setFormError("")
         setView("onboarding")
     }
 
@@ -253,13 +253,11 @@ export default function NizaChat() {
             return
         }
         setView("loading")
-        setLoadError("")
         setOpen(true)
     }
 
     function tentarCarregar() {
         setView("loading")
-        setLoadError("")
         setLoadAttempt((attempt) => attempt + 1)
     }
 
@@ -307,15 +305,14 @@ export default function NizaChat() {
 
                     {view === "error" && (
                         <div className="niza-chat__state">
-                            <p role="alert">{loadError}</p>
                             <button type="button" className="niza-chat__action" onClick={tentarCarregar}>
-                                Tentar novamente
+                                Tentar carregar novamente
                             </button>
                         </div>
                     )}
 
                     {view === "onboarding" && (
-                        <form className="niza-chat__onboarding" onSubmit={enviarOnboarding}>
+                        <form className="niza-chat__onboarding" onSubmit={enviarOnboarding} noValidate>
                             <div className="niza-chat__progress-copy">Etapa {step + 1} de 2</div>
                             <div className="niza-chat__progress" aria-hidden="true">
                                 <span style={{ width: step === 0 ? "50%" : "100%" }} />
@@ -372,7 +369,6 @@ export default function NizaChat() {
                                     </label>
                                 </div>
                             )}
-                            {formError && <p className="niza-chat__error" role="alert">{formError}</p>}
                             <footer className="niza-chat__form-actions">
                                 {step === 1 && (
                                     <button type="button" className="niza-chat__secondary" onClick={() => setStep(0)}>
@@ -395,7 +391,6 @@ export default function NizaChat() {
                                 </span>
                                 <button type="button" className="niza-chat__edit" onClick={editarPerfil}>Editar perfil</button>
                             </div>
-                            {connectionError && <p className="niza-chat__error" role="alert">{connectionError}</p>}
                             <div className="niza-chat__messages" aria-live="polite" aria-relevant="additions text">
                                 {messages.length === 0 && (
                                     <div className="niza-chat__welcome">
