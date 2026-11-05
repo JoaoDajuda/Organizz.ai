@@ -17,7 +17,10 @@ python-multipart
 
 pip install sqlalchemy sqlalchemy.orm fastapi uvicorn passlib dotenv alembic bcrypt==4.3.0 python-jose[cryptography] pymysql python-multipart 'pydantic[email]'
 
+#para iniciar ambiente virtual: source .venv/bin/activate
+
 #para rodar o código: uvicorn main:app --reload
+
 
 #para iniciar o banco
 #alembic init alembic

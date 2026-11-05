@@ -16,7 +16,7 @@ export default function Login() {
     const [confirmaSenhaReset, setConfirmaSenhaReset] = useState(""); // Redefinir senha
     const [modo, setModo] = useState("Login") //Login/Criar conta/Redefinir Senha
     const [confirmacao, setConfirmacao] = useState(""); //Confirmação de credenciais
-    const navigate = useNavigate()
+    const navigate = useNavigate() //Navegar entre páginas
 
     const FazerCadastro = async () => {
         setConfirmacao("");
