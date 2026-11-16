@@ -107,13 +107,15 @@ async def esqueci_senha(dados: SolicitarEmailSchema, session: Session = Depends(
     if usuario:
         codigo = gerar_recuperacao()
         usuario.codigo_recuperacao = codigo
-        usuario.codigo_recuperacao_expira = datetime.utcnow() + timedelta(minutes=15)
+        usuario.codigo_recuperacao_expira = datetime.now(timezone.utc) + timedelta(minutes=15)
         session.add(usuario)
         session.commit()
 
         corpo = f"<p>Seu código para redefinir sua senha (válido por 15 minutos) é:</p><h2>{codigo}</h2>"
         enviar_email(usuario.email, "Recuperação de senha - Organizz.ai", corpo)
 
+    print(repr(dados.email))
+    print(session.query(Usuario).count())
     return {"mensagem": "Se o email estiver cadastrado, um link de recuperação de senha foi enviado."}
 
 
@@ -128,7 +130,7 @@ async def resetar_senha(dados: ResetSenhaSchema, session: Session = Depends(pega
     if not usuario.codigo_recuperacao or usuario.codigo_recuperacao != dados.codigo:
         raise HTTPException(status_code=400, detail="Código inválido")
 
-    if usuario.codigo_recuperacao_expira < datetime.utcnow():
+    if usuario.codigo_recuperacao_expira < datetime.now(timezone.utc):
         raise HTTPException(status_code=400, detail="Código expirado")
 
     usuario.senha = bcrypt_context.hash(dados.nova_senha)

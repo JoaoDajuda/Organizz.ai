@@ -1,8 +1,8 @@
-"""recriando 2.0
+"""start de holomogação
 
-Revision ID: fdbfc5328a00
+Revision ID: cc9dba499234
 Revises: 
-Create Date: 2026-08-24 22:25:23.380721
+Create Date: 2026-11-11 21:12:40.135858
 
 """
 from typing import Sequence, Union
@@ -11,9 +11,8 @@ from alembic import op
 import sqlalchemy as sa
 import sqlmodel
 
-
 # revision identifiers, used by Alembic.
-revision: str = 'fdbfc5328a00'
+revision: str = 'cc9dba499234'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -30,8 +29,10 @@ def upgrade() -> None:
     sa.Column('emailrec', sqlmodel.sql.sqltypes.AutoString(length=200), nullable=True),
     sa.Column('ativo', sa.Boolean(), nullable=False),
     sa.Column('admin', sa.Boolean(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('deleted_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=False),
+    sa.Column('deleted_at', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=True),
+    sa.Column('codigo_recuperacao', sqlmodel.sql.sqltypes.AutoString(length=6), nullable=True),
+    sa.Column('codigo_recuperacao_expira', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id_usuario')
     )
     op.create_index(op.f('ix_usuario_email'), 'usuario', ['email'], unique=False)
@@ -42,18 +43,18 @@ def upgrade() -> None:
     sa.Column('titulo', sqlmodel.sql.sqltypes.AutoString(length=200), nullable=False),
     sa.Column('data', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('status', sa.Enum('pendente', 'concluida', 'atrasada', name='statusagenda'), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('deleted_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=False),
+    sa.Column('deleted_temp', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=True),
+    sa.Column('deleted_at', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=True),
     sa.ForeignKeyConstraint(['id_usuario'], ['usuario.id_usuario'], ),
     sa.PrimaryKeyConstraint('id_agenda')
     )
-    op.create_index(op.f('ix_agenda_id_usuario'), 'agenda', ['id_usuario'], unique=False)
     op.create_table('financeiro',
     sa.Column('id_financeiro', sa.Integer(), nullable=False),
     sa.Column('id_usuario', sa.Integer(), nullable=False),
     sa.Column('saldo', sa.Float(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('deleted_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=False),
+    sa.Column('deleted_at', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=True),
     sa.ForeignKeyConstraint(['id_usuario'], ['usuario.id_usuario'], ),
     sa.PrimaryKeyConstraint('id_financeiro')
     )
@@ -62,7 +63,8 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('id_usuario', sa.Integer(), nullable=False),
     sa.Column('valor', sa.Float(), nullable=False),
-    sa.Column('data_movimentacao', sa.DateTime(), nullable=False),
+    sa.Column('saldo', sa.Float(), nullable=True),
+    sa.Column('data_movimentacao', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=False),
     sa.ForeignKeyConstraint(['id_usuario'], ['usuario.id_usuario'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -73,9 +75,9 @@ def upgrade() -> None:
     sa.Column('id_financeiro', sa.Integer(), nullable=False),
     sa.Column('valor', sa.Float(), nullable=False),
     sa.Column('tipo', sa.Enum('entrada', 'saida', name='tipotransacao'), nullable=False),
-    sa.Column('data_mov', sa.DateTime(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('deleted_at', sa.DateTime(), nullable=True),
+    sa.Column('data_mov', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=False),
+    sa.Column('created_at', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=False),
+    sa.Column('deleted_at', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=True),
     sa.ForeignKeyConstraint(['id_financeiro'], ['financeiro.id_financeiro'], ),
     sa.ForeignKeyConstraint(['id_usuario'], ['usuario.id_usuario'], ),
     sa.PrimaryKeyConstraint('id_transacoes')
@@ -95,7 +97,6 @@ def downgrade() -> None:
     op.drop_table('valores')
     op.drop_index(op.f('ix_financeiro_id_usuario'), table_name='financeiro')
     op.drop_table('financeiro')
-    op.drop_index(op.f('ix_agenda_id_usuario'), table_name='agenda')
     op.drop_table('agenda')
     op.drop_index(op.f('ix_usuario_nome'), table_name='usuario')
     op.drop_index(op.f('ix_usuario_email'), table_name='usuario')
