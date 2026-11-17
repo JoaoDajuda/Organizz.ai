@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 from pydantic import EmailStr
 
@@ -23,11 +23,11 @@ class LoginSchemas(BaseModel):
     class Config:
         from_attributes = True
 
-#parametros para entrada de dados
-class EntradaSchema(BaseModel):
-    id_usuario: int
-    valor: float
 
+class EntradaSchema(BaseModel):
+    valor: float = Field(gt=0)
+    tipo_valor: str  
+    
     class Config:
         from_attributes = True
 

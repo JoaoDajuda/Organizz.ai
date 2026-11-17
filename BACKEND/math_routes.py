@@ -1,71 +1,103 @@
-from fastapi import APIRouter, Depends
-from models import Usuario, Valores
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import update
-from dependencies import pegar_sessao
+
+from models import Usuario, Valores
+from dependencies import pegar_sessao, verificar_token
 from schemas import EntradaSchema
 
 math_router = APIRouter(prefix="/contas", tags=["contas"])
-add_router = APIRouter(prefix="/soma", tags=["contas"])
-sub_router = APIRouter(prefix="/subtracao", tags=["contas"])
 
 
-@math_router.post("/adicao")
-async def criar_input(entradaschema: EntradaSchema, session: Session = Depends(pegar_sessao)):
-    """essa rota é reponsavel por criar o acesso as entradas de valores do usuário no banco de dados"""
-    usuario = session.query(Usuario).filter(Usuario.id_usuario == entradaschema.id_usuario).first()
-    if usuario:
-        novo_input = Valores(
-            id_usuario=entradaschema.id_usuario, 
-            valor=entradaschema.valor
-        )
-        session.add(novo_input)
-        session.commit()
-        return {"mensagem": "entrada registrada com sucesso!"}
-    else:
-        return{"mensagem":{"id não cadastrado, tente novamente"}}
-
-@add_router.patch("/soma")
-async def soma(entradaschema: EntradaSchema, session: Session = Depends(pegar_sessao)):
-    """Rota responsável por somar os valores solicitados no banco de dados"""
-    usuario = session.query(Usuario).filter(Usuario.id_usuario == entradaschema.id_usuario).first()
-    if usuario:
-
-        registro = session.query(Valores).filter(Valores.id_usuario == entradaschema.id_usuario).order_by(Valores.id.desc()).first()
-
-        valor_anterior = registro.valor
-
-        if registro:
-            adicao = valor_anterior + entradaschema.valor
-
-            nova_movimentacao = Valores(valor= adicao, id_usuario=usuario.id_usuario)
-
-            session.add(nova_movimentacao)
-            session.commit()
-        else:
-            0.0
-            return {"mensagem": "id não cadastrado, tente novamente"}
-    return {"mensagem": "Novo registro criado com sucesso!"}
+def ultimo_saldo(session: Session, id_usuario: int) -> float:
+    registro = (
+        session.query(Valores)
+        .filter(Valores.id_usuario == id_usuario)
+        .order_by(Valores.id.desc())
+        .first()
+    )
+    return registro.valor if registro else 0.0
 
 
-@sub_router.patch("/subtracao")
-async def subtracao(entradaschema: EntradaSchema, session: Session = Depends(pegar_sessao)):
-    """Rota responsável por subtrair os valores solicitados no banco de dados"""
-    usuario = session.query(Usuario).filter(Usuario.id_usuario == entradaschema.id_usuario).first()
-    if usuario:
+@math_router.post("/adicao", status_code=201)
+def criar_input(
+    entrada: EntradaSchema,
+    session: Session = Depends(pegar_sessao),
+    usuario: Usuario = Depends(verificar_token),
+):
+    """Cria uma entrada de valor para o usuário autenticado."""
+    novo_input = Valores(
+        id_usuario=usuario.id_usuario,
+        valor=entrada.valor,
+        tipo_valor=entrada.tipo_valor,
+    )
+    session.add(novo_input)
+    session.commit()
+    return {"mensagem": "entrada registrada com sucesso!"}
 
-        registro = session.query(Valores).filter(Valores.id_usuario == entradaschema.id_usuario).order_by(Valores.id.desc()).first()
 
-        valor_anterior = registro.valor
+@math_router.post("/soma", status_code=201)
+def soma(
+    entrada: EntradaSchema,
+    session: Session = Depends(pegar_sessao),
+    usuario: Usuario = Depends(verificar_token),
+):
+    """Soma o valor ao último saldo e cria um novo registro."""
+    novo_valor = ultimo_saldo(session, usuario.id_usuario) + entrada.valor
+    session.add(Valores(
+        id_usuario=usuario.id_usuario,
+        valor=novo_valor,
+        tipo_valor=entrada.tipo_valor,
+    ))
+    session.commit()
+    return {"mensagem": "Novo registro criado com sucesso!", "saldo": novo_valor}
 
-        if registro:
-            subtracao = valor_anterior - entradaschema.valor
 
-            nova_movimentacao = Valores(valor= subtracao, id_usuario=usuario.id_usuario)
+@math_router.post("/subtracao", status_code=201)
+def subtracao(
+    entrada: EntradaSchema,
+    session: Session = Depends(pegar_sessao),
+    usuario: Usuario = Depends(verificar_token),
+):
+    """Subtrai o valor do último saldo e cria um novo registro."""
+    novo_valor = ultimo_saldo(session, usuario.id_usuario) - entrada.valor
+    session.add(Valores(
+        id_usuario=usuario.id_usuario,
+        valor=novo_valor,
+        tipo_valor=entrada.tipo_valor,
+    ))
+    session.commit()
+    return {"mensagem": "Registro criado com sucesso!", "saldo": novo_valor}
 
-            session.add(nova_movimentacao)
-            session.commit()
-        else:
-            0.0
-            return {"mensagem": "id não cadastrado, tente novamente"}
-    return {"mensagem": "Registro criado com sucesso!"}
+
+@math_router.get("/")
+def listar_valores(
+    session: Session = Depends(pegar_sessao),
+    usuario: Usuario = Depends(verificar_token),
+):
+    """Lista os lançamentos do usuário autenticado."""
+    registros = (
+        session.query(Valores)
+        .filter(Valores.id_usuario == usuario.id_usuario)
+        .order_by(Valores.id.desc())
+        .all()
+    )
+    return registros
+
+
+@math_router.delete("/{id_valor}")
+def deletar_valor(
+    id_valor: int,
+    session: Session = Depends(pegar_sessao),
+    usuario: Usuario = Depends(verificar_token),
+):
+    """Exclui um lançamento, só se pertencer ao usuário autenticado."""
+    registro = (
+        session.query(Valores)
+        .filter(Valores.id == id_valor, Valores.id_usuario == usuario.id_usuario)
+        .first()
+    )
+    if not registro:
+        raise HTTPException(status_code=404, detail="Lançamento não encontrado")
+    session.delete(registro)
+    session.commit()
+    return {"mensagem": "Lançamento excluído com sucesso!"}
