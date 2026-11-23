@@ -3,5 +3,9 @@ venv/
 .dev-logs/
 __pycache__/
 *.pyc
+node_modules/
+dist/
+*.db
+*.sqlite3
 
 .env

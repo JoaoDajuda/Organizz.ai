@@ -110,6 +110,35 @@ export async function ExcluirAgenda(idAgenda) {
     }
 }
 
+export async function ListarValores() {
+    try {
+        const response = await api.get("/valores");
+        return response.data;
+    } catch (error) {
+        const diagnostico = registrarFalhaApi("GET /valores", error);
+        throw new Error(diagnostico.detalhe || "Não foi possível carregar suas movimentações.");
+    }
+}
+
+export async function CriarValor(valor) {
+    try {
+        const response = await api.post("/valores", valor);
+        return response.data;
+    } catch (error) {
+        const diagnostico = registrarFalhaApi("POST /valores", error);
+        throw new Error(diagnostico.detalhe || "Não foi possível registrar o valor.");
+    }
+}
+
+export async function ExcluirValor(idValor) {
+    try {
+        await api.delete(`/valores/${idValor}`);
+    } catch (error) {
+        const diagnostico = registrarFalhaApi(`DELETE /valores/${idValor}`, error);
+        throw new Error(diagnostico.detalhe || "Não foi possível excluir a movimentação.");
+    }
+}
+
 // Para enviar o token em toda requisição
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem("acess_token");

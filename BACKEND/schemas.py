@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Literal, Optional
+from datetime import datetime
 from pydantic import EmailStr, Field as SchemaField
 
 #parametros para a criação de usuários
@@ -57,6 +58,31 @@ class AgendaResponseSchema(BaseModel):
     data_fim: Optional[str] = None
     dia_inteiro: bool
     status: Literal["pendente", "concluida", "atrasada"]
+
+    class Config:
+        from_attributes = True
+
+
+# parametros para movimentações financeiras (modelo "Valores")
+class ValoresCreateSchema(BaseModel):
+    tipo_valor: Literal["Entrada", "Saida"]
+    valor: float = SchemaField(gt=0)
+    # "tipo de gasto" — obrigatório para saídas, opcional para entradas
+    categoria: Optional[str] = SchemaField(default=None, min_length=1, max_length=32)
+    # data da movimentação no formato AAAA-MM-DD (padrão: agora)
+    data: Optional[str] = SchemaField(default=None, max_length=64)
+
+    class Config:
+        from_attributes = True
+
+
+class ValoresResponseSchema(BaseModel):
+    id: int
+    tipo_valor: str
+    valor: float
+    saldo: Optional[float] = None
+    categoria: Optional[str] = None
+    data_movimentacao: datetime
 
     class Config:
         from_attributes = True

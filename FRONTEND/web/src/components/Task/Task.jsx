@@ -46,7 +46,13 @@ function formatarHorario(agenda) {
 export default function Task({ agendas, onUpdateStatus, onDeleteAgenda }) {
     const [proceed, setProceed] = useState(false);
     const [error, setError] = useState("");
-    const agendasPorDia = agendas.reduce((grupos, agenda) => {
+    const agendasOrdenadas = [...agendas].sort((a, b) => {
+        const dataA = typeof a.data === "string" ? a.data : "";
+        const dataB = typeof b.data === "string" ? b.data : "";
+        if (dataA !== dataB) return dataB.localeCompare(dataA);
+        return (b.id_agenda ?? 0) - (a.id_agenda ?? 0);
+    });
+    const agendasPorDia = agendasOrdenadas.reduce((grupos, agenda) => {
         const data = typeof agenda.data === "string" ? agenda.data.slice(0, 10) : "";
         const chave = /^\d{4}-\d{2}-\d{2}$/.test(data) ? data : "sem-data";
         grupos[chave] ??= [];
@@ -56,7 +62,7 @@ export default function Task({ agendas, onUpdateStatus, onDeleteAgenda }) {
     const diasOrdenados = Object.keys(agendasPorDia).sort((a, b) => {
         if (a === "sem-data") return 1;
         if (b === "sem-data") return -1;
-        return a.localeCompare(b);
+        return b.localeCompare(a);
     });
 
     async function alternarStatus(agenda) {

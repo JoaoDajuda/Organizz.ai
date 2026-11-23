@@ -21,7 +21,7 @@ def listar_agendas(
             Agenda.id_usuario == usuario.id_usuario,
             Agenda.deleted_at.is_(None),
         )
-        .order_by(Agenda.data, Agenda.id_agenda)
+        .order_by(Agenda.data.desc(), Agenda.id_agenda.desc())
         .all()
     )
 

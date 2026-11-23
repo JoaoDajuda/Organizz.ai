@@ -9,7 +9,8 @@
 
 .ContainerPrincipal{
     position: relative;
-    height: 100vh;
+    min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -51,8 +52,10 @@
 }
 
 .ContainerFormulario {
-    width: 500px;
-    height: 600px;
+    box-sizing: border-box;
+    width: min(500px, 100%);
+    height: auto;
+    min-height: 600px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -174,5 +177,66 @@
 
 .cadastro:hover {
     opacity: 1;
+}
+
+/* Tablet: colunas decorativas laterais somem para liberar espaço */
+@media (max-width: 900px) {
+    .ColunaEsquerda,
+    .ColunaDireita {
+        display: none;
+    }
+}
+
+/* Celulares */
+@media (max-width: 520px) {
+    .ContainerPrincipal {
+        justify-content: flex-start;
+        padding: 20px 8px;
+    }
+
+    /* Moldura externa mais fina */
+    .ContainerPrincipal::after {
+        border-width: 16px;
+        border-image-width: 16px;
+    }
+
+    /* Moldura do formulário mais fina e conteúdo respirando */
+    .ContainerFormulario {
+        border-width: 20px;
+        border-image-width: 20px;
+        min-height: 0;
+        padding: 12px 4px;
+    }
+
+    .Logo {
+        width: clamp(110px, 36vw, 150px);
+    }
+
+    .Input {
+        width: 100%;
+        max-width: 340px;
+        box-sizing: border-box;
+        /* Evita zoom automático no iOS ao focar o campo */
+        font-size: 16px;
+        margin: 4px 0;
+    }
+
+    .areaLogin {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .editaUsuario {
+        align-items: center;
+        text-align: center;
+    }
+
+    .BotaoLogin {
+        align-self: stretch;
+        width: 100%;
+        padding: 12px 28px;
+    }
 }
 

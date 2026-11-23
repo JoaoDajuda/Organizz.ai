@@ -96,6 +96,10 @@
     width: 90%;
 }
 
+.title {
+    color: #C9A94D;
+}
+
 .content {
     grid-column: 2;
     grid-row: 2;

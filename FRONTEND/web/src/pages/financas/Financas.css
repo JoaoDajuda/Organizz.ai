@@ -1,0 +1,321 @@
+.PaginaFinancas {
+    --financas-surface: #1B2A4A;
+    --financas-surface-escura: #0F1B33;
+    --financas-gold: #C9A94D;
+    --financas-gold-escuro: #A8863E;
+    --financas-texto: #F5F0E6;
+    --financas-muted: #C5CCD6;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+}
+
+.financasTopo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.financasTitulo {
+    margin: 0;
+    font-family: var(--font-heading, 'Cinzel', serif);
+    color: var(--financas-gold);
+    font-size: clamp(1.25rem, 2vw + 0.5rem, 2rem);
+    letter-spacing: 0.03em;
+}
+
+.financasSubtitulo {
+    margin: 0;
+    font-family: var(--font-body, 'Cormorant Garamond', serif);
+    color: var(--financas-muted);
+    font-size: 0.95rem;
+}
+
+/* Cards de resumo (entradas / gastos / saldo) */
+.financasResumo {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.financasCardResumo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background-color: var(--financas-surface);
+    border: 1px solid rgba(201, 169, 77, 0.45);
+    border-radius: 6px;
+    padding: 16px 20px;
+}
+
+.resumoRotulo {
+    font-family: var(--font-heading, 'Cinzel', serif);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--financas-muted);
+}
+
+.resumoValor {
+    font-family: var(--font-heading, 'Cinzel', serif);
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.resumoEntradas {
+    color: #7FC9A0;
+}
+
+.resumoSaidas {
+    color: #E39B8B;
+}
+
+/* Corpo: gráfico + card de tipos */
+.financasCorpo {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 460px);
+    align-items: start;
+    gap: 20px;
+}
+
+.cardTitulo {
+    margin: 0 0 12px;
+    font-family: var(--font-heading, 'Cinzel', serif);
+    color: var(--financas-gold);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.financasCardGrafico,
+.financasCardTipos,
+.financasCardForm {
+    background-color: var(--financas-surface);
+    border: 1px solid rgba(201, 169, 77, 0.45);
+    border-radius: 6px;
+    padding: 20px;
+}
+
+/* Coluna direita: card de tipos + formulário empilhados */
+.financasLateral {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    min-width: 0;
+}
+
+.graficoArea {
+    width: min(100%, 420px);
+    margin-inline: auto;
+}
+
+/* Card com os tipos de gasto do gráfico */
+.tiposLista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tipoItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: rgba(201, 169, 77, 0.06);
+    border: 1px solid rgba(201, 169, 77, 0.25);
+    border-radius: 4px;
+    padding: 10px 14px;
+}
+
+.tipoCor {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+}
+
+.tipoNome {
+    flex: 1;
+    font-family: var(--font-body, 'Cormorant Garamond', serif);
+    color: var(--financas-texto);
+    font-size: 1rem;
+}
+
+.tipoValores {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.tipoValor {
+    font-family: var(--font-heading, 'Cinzel', serif);
+    color: var(--financas-texto);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.tipoPorcentagem {
+    font-family: var(--font-body, 'Cormorant Garamond', serif);
+    color: var(--financas-muted);
+    font-size: 0.78rem;
+}
+
+/* Estados vazios */
+.graficoVazio,
+.listaVazia {
+    margin: 0;
+    font-family: var(--font-body, 'Cormorant Garamond', serif);
+    color: var(--financas-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.graficoVazio {
+    padding: 24px 4px;
+    text-align: center;
+}
+
+/* Formulário de adicionar valor */
+.formTipo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.formTipoBotao {
+    font-family: var(--font-heading, 'Cinzel', serif);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--financas-muted);
+    background: transparent;
+    border: 1px solid rgba(201, 169, 77, 0.45);
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.formTipoBotao:hover {
+    border-color: var(--financas-gold);
+    color: var(--financas-texto);
+}
+
+.formTipoBotao.selecionado {
+    color: var(--financas-surface-escura);
+    font-weight: 700;
+}
+
+.formTipoBotao.selecionado.entrada {
+    background-color: #7FC9A0;
+    border-color: #7FC9A0;
+}
+
+.formTipoBotao.selecionado.saida {
+    background-color: var(--financas-gold);
+    border-color: var(--financas-gold);
+}
+
+.formCampo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 12px;
+}
+
+.formCampo span {
+    font-family: var(--font-heading, 'Cinzel', serif);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--financas-muted);
+}
+
+.formCampo input,
+.formCampo select {
+    background-color: var(--financas-surface-escura);
+    border: 1px solid rgba(201, 169, 77, 0.35);
+    border-radius: 4px;
+    color: var(--financas-texto);
+    font-family: var(--font-body, 'Cormorant Garamond', serif);
+    font-size: 1rem;
+    padding: 9px 12px;
+}
+
+.formCampo input:focus,
+.formCampo select:focus {
+    outline: none;
+    border-color: var(--financas-gold);
+}
+
+.formCampo input::placeholder {
+    color: rgba(197, 204, 214, 0.5);
+}
+
+/* Calendário nativo do date input no tema escuro */
+.formCampo input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8) sepia(0.3);
+    cursor: pointer;
+}
+
+.formFeedback {
+    margin: 0 0 10px;
+    font-family: var(--font-body, 'Cormorant Garamond', serif);
+    font-size: 0.9rem;
+}
+
+.formFeedback.erro {
+    color: #E39B8B;
+}
+
+.formFeedback.sucesso {
+    color: #7FC9A0;
+}
+
+.formEnviar {
+    width: 100%;
+    background-color: var(--financas-gold);
+    border: 1px solid var(--financas-gold);
+    color: var(--financas-surface-escura);
+    font-family: var(--font-heading, 'Cinzel', serif);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    padding: 10px 16px;
+    cursor: pointer;
+}
+
+.formEnviar:hover:not(:disabled) {
+    background-color: #dfc276;
+    border-color: #dfc276;
+}
+
+.formEnviar:active:not(:disabled) {
+    background-color: var(--financas-gold-escuro);
+}
+
+.formEnviar:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+@media (max-width: 1100px) {
+    .financasCorpo {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 700px) {
+    .financasResumo {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

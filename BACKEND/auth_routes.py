@@ -121,9 +121,11 @@ async def criar_conta(usuarioschemas: UsuarioSchemas, session: Session = Depends
         session.rollback()
         root_error = getattr(error, "orig", error)
         logger.error(
-            "Dados inválidos para persistência no cadastro (request_id=%s, tipo=%s)",
+            "Dados inválidos para persistência no cadastro "
+            "(request_id=%s, tipo=%s, erro=%s)",
             request_id,
             type(root_error).__name__,
+            str(root_error),
         )
         raise HTTPException(
             status_code=500,

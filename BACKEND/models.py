@@ -72,6 +72,7 @@ class Valores(SQLModel, table=True):
     tipo_valor: TipoTransacao = Field()
     valor: float = Field()
     saldo: Optional[float] = Field(default=0.0)
-    data_movimentacao: datetime = Field(default_factory=datetime.utcnow)
+    categoria: Optional[str] = Field(default=None, max_length=32)
+    data_movimentacao: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     usuario: Optional[Usuario] = Relationship(back_populates="valores")

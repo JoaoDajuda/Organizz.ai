@@ -1,7 +1,8 @@
 import asyncio
 import json
 import os
-from typing import List, Union
+import re
+from typing import List, Optional, Union
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 from uuid import uuid4
@@ -32,6 +33,27 @@ class ChatRequest(BaseModel):
     input: List[MessageItem]
 
 BACKEND_API_URL = os.getenv("BACKEND_API_URL", "http://localhost:8000")
+
+_PADRAO_REQUEST_ID = re.compile(r'"request_id"\s*:\s*("(?:[^"\\]|\\.)*"|-?\d+)')
+
+
+def _extrair_request_id(texto: str) -> Optional[Union[str, int]]:
+    """Tenta recuperar o request_id de uma mensagem JSON malformada (best effort).
+
+    Usado apenas quando o JSON não pôde ser interpretado, para preservar a
+    correlação request_id no protocolo sempre que for possível recuperá-lo.
+    """
+    match = _PADRAO_REQUEST_ID.search(texto)
+    if not match:
+        return None
+    bruto = match.group(1)
+    if not bruto.startswith('"'):
+        return int(bruto)
+    try:
+        valor = json.loads(bruto)
+    except json.JSONDecodeError:
+        return None
+    return valor if isinstance(valor, str) and valor else None
 
 
 def _buscar_perfil_onboarding(token: str):
@@ -127,6 +149,11 @@ async def chat_niza_stream(websocket: WebSocket):
         except asyncio.TimeoutError:
             await websocket.close(code=4401, reason="Autenticação necessária")
             return
+        except (json.JSONDecodeError, KeyError):
+            # receive_json lança JSONDecodeError em JSON malformado e KeyError
+            # em frame binário. Payload irregular encerra a autenticação.
+            await websocket.close(code=4401, reason="Mensagem de autenticação inválida")
+            return
 
         if (
             not isinstance(auth_message, dict)
@@ -155,7 +182,28 @@ async def chat_niza_stream(websocket: WebSocket):
         await websocket.send_json({"type": "authenticated"})
 
         while True:
-            raw_payload = await websocket.receive_json()
+            try:
+                raw_text = await websocket.receive_text()
+            except KeyError:
+                # Frame binário: o protocolo aceita apenas texto JSON.
+                await websocket.send_json({
+                    "type": "error",
+                    "request_id": str(uuid4()),
+                    "detail": "Mensagem inválida. Envie JSON em formato de texto.",
+                })
+                continue
+
+            try:
+                raw_payload = json.loads(raw_text)
+            except json.JSONDecodeError:
+                request_id = _extrair_request_id(raw_text) or str(uuid4())
+                await websocket.send_json({
+                    "type": "error",
+                    "request_id": request_id,
+                    "detail": "Formato JSON inválido. Envie uma mensagem JSON válida.",
+                })
+                continue
+
             request_id = (
                 raw_payload.get("request_id")
                 if isinstance(raw_payload, dict)

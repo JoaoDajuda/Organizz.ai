@@ -20,6 +20,7 @@ from auth_routes import auth_router
 from agendas_routes import agenda_router
 from math_routes import math_router, add_router, sub_router
 from onboarding_routes import onboarding_router
+from valores_routes import valores_router
 
 app.add_middleware(
     CORSMiddleware,
@@ -32,6 +33,7 @@ app.add_middleware(
 
 app.include_router(auth_router)
 app.include_router(agenda_router)
+app.include_router(valores_router)
 app.include_router(onboarding_router)
 app.include_router(math_router)
 app.include_router(add_router)
