@@ -56,7 +56,7 @@
     grid-template-rows: auto minmax(0, 1fr);
     width: min(400px, calc(100vw - 32px));
     height: min(650px, calc(100dvh - 112px));
-    min-height: 390px;
+    min-height: min(390px, calc(100dvh - 112px));
     overflow: hidden;
     border: 1px solid #d8d0bf;
     border-radius: 8px;
@@ -122,11 +122,6 @@
     font-size: 13px;
 }
 
-.niza-chat__conversation {
-    min-height: 0;
-    overflow-y: auto;
-}
-
 .niza-chat__state {
     display: flex;
     flex-direction: column;
@@ -138,6 +133,13 @@
 
 .niza-chat__onboarding {
     padding: 18px;
+}
+
+.niza-chat__state,
+.niza-chat__onboarding {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .niza-chat__progress-copy {
@@ -280,8 +282,9 @@
 }
 
 .niza-chat__conversation {
-    display: grid;
-    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     overflow: hidden;
 }
 
@@ -324,10 +327,35 @@
 
 .niza-chat__messages {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     gap: 10px;
+    min-height: 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: #c6b98f transparent;
     padding: 16px 14px;
+}
+
+.niza-chat__messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.niza-chat__messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.niza-chat__messages::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: #c6b98f;
+}
+
+.niza-chat__toolbar,
+.niza-chat__composer,
+.niza-chat__conversation > .niza-chat__error {
+    flex: 0 0 auto;
 }
 
 .niza-chat__welcome {
@@ -423,7 +451,7 @@
         bottom: 72px;
         width: calc(100vw - 16px);
         height: calc(100dvh - 88px);
-        min-height: 340px;
+        min-height: min(340px, calc(100dvh - 88px));
     }
 }
 

@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import './fullcalendar-overrides.css';
 
 const MINUTOS_NO_DIA = 24 * 60;
@@ -187,6 +187,10 @@ function chaveDataLocal(data) {
 
 function CalendarGrid({ agendas, onCreateAgenda, onDeleteAgenda, onDataSelect }) {
   const [error, setError] = useState('');
+  // Mês usa altura automática (sem scroll interno); Semana/Dia mantêm a altura fixa original.
+  const [alturaCalendario, setAlturaCalendario] = useState('auto');
+
+  const ultimoClique = useRef({ data: '', quando: 0 });
 
   const events = agendas.map((agenda) => ({
     id: String(agenda.id_agenda),
@@ -196,8 +200,26 @@ function CalendarGrid({ agendas, onCreateAgenda, onDeleteAgenda, onDataSelect })
     allDay: agenda.dia_inteiro || !agenda.data?.includes('T'),
   }));
 
-  const handleSelect = async (info) => {
-    onDataSelect(chaveDataLocal(info.startStr));
+  const ajustarAlturaPorVisao = (info) => {
+    const altura = info.view.type === 'dayGridMonth' ? 'auto' : 450;
+    setAlturaCalendario((atual) => (atual === altura ? atual : altura));
+  };
+
+  const handleDateClick = async (info) => {
+    const dataClicada = chaveDataLocal(info.dateStr);
+    onDataSelect(dataClicada);
+
+    const agora = Date.now();
+    const anterior = ultimoClique.current;
+    const duploClique = dataClicada === anterior.data
+      && (info.jsEvent?.detail >= 2 || agora - anterior.quando < 350);
+
+    ultimoClique.current = duploClique
+      ? { data: '', quando: 0 }
+      : { data: dataClicada, quando: agora };
+
+    if (!duploClique) return;
+
     const titulo = prompt('Título do evento:')?.trim();
     if (!titulo) return;
 
@@ -205,9 +227,9 @@ function CalendarGrid({ agendas, onCreateAgenda, onDeleteAgenda, onDataSelect })
     try {
       await onCreateAgenda({
         titulo,
-        data: info.startStr,
-        data_fim: info.endStr || null,
-        dia_inteiro: info.allDay,
+        data: info.dateStr,
+        data_fim: null,
+        dia_inteiro: true,
       });
     } catch (requestError) {
       setError(requestError.message || 'Não foi possível salvar a tarefa.');
@@ -230,13 +252,15 @@ function CalendarGrid({ agendas, onCreateAgenda, onDeleteAgenda, onDataSelect })
       {error && <p role="alert">{error}</p>}
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        height={450}
+        height={alturaCalendario}
         initialView="dayGridMonth"
         locale="pt-br"
         events={events}
-        selectable={true}
-        dateClick={(info) => onDataSelect(chaveDataLocal(info.dateStr))}
-        select={handleSelect}
+        fixedWeekCount={false}
+        dayMaxEvents={2}
+        moreLinkText={(quantidade) => `+${quantidade}`}
+        datesSet={ajustarAlturaPorVisao}
+        dateClick={handleDateClick}
         eventClick={handleEventClick}
         slotMinTime="00:00:00"
         slotMaxTime="24:00:00"

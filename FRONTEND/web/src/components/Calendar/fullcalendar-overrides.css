@@ -20,7 +20,7 @@
 /* Título do calendário (mês/ano) */
 .fc .fc-toolbar-title {
   font-family: var(--font-heading, 'Cinzel', serif);
-  color: var(--color-navy, #ffffff) !important;
+  color: var(--color-navy, #C9A94D) !important;
   font-size: clamp(1.05rem, 1.1vw + 0.65rem, 1.6rem);
   letter-spacing: 0.03em;
 }
@@ -84,6 +84,38 @@
 
 .fc .fc-event-title {
   font-family: var(--font-body, 'Cormorant Garamond', serif);
+}
+
+/* Visão de mês compacta: células menores, com os títulos dos eventos visíveis */
+.fc .fc-daygrid-day-frame {
+  min-height: 56px;
+}
+
+.fc .fc-daygrid-day-number {
+  padding: 2px 5px;
+  font-size: 0.8rem;
+}
+
+.fc .fc-daygrid-day-events {
+  margin-top: 0;
+  margin-bottom: 0.15em;
+}
+
+.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+  min-height: 1.2em;
+}
+
+.fc .fc-daygrid-event {
+  margin: 1px 0 0;
+  padding: 1px 4px;
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
+.fc .fc-daygrid-more-link {
+  margin-top: 0;
+  padding: 1px 4px;
+  font-size: 0.7rem;
 }
 
 /* Linhas de grade mais discretas */

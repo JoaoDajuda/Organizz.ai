@@ -88,48 +88,52 @@ export default function Task({ agendas, onUpdateStatus, onDeleteAgenda }) {
 
     return (
         <div className="container">
-            {agendas.length === 0 && <p>Nenhuma tarefa agendada.</p>}
-            {diasOrdenados.map((dia) => (
-                <section className="TaskDayGroup" key={dia}>
-                    <h3 className="TaskDayTitle">{formatarData(dia)}</h3>
-                    {agendasPorDia[dia].map((agenda) => {
-                        const completed = agenda.status === "concluida";
-                        return (
-                            <div
-                                className="Task"
-                                key={agenda.id_agenda}
-                                style={{ textDecoration: completed ? 'line-through' : 'none' }}
-                            >
-                                <input
-                                    type="checkbox"
-                                    checked={completed}
-                                    disabled={!proceed}
-                                    onChange={() => alternarStatus(agenda)}
-                                    aria-label={`Marcar ${agenda.titulo} como ${completed ? "pendente" : "concluída"}`}
-                                />
-                                {completed ? <LuCheckCheck /> : <LuCircleAlert />}
-                                <div className="TaskTitle">
-                                    <span>{agenda.titulo}</span>
-                                    <small className="TaskTime">{formatarHorario(agenda)}</small>
-                                </div>
-                                <button
-                                    className="TaskDelete"
-                                    type="button"
-                                    disabled={!proceed}
-                                    aria-label={`Excluir ${agenda.titulo}`}
-                                    onClick={() => excluir(agenda)}
+            <div className="TaskList">
+                {agendas.length === 0 && <p>Nenhuma tarefa agendada.</p>}
+                {diasOrdenados.map((dia) => (
+                    <section className="TaskDayGroup" key={dia}>
+                        <h3 className="TaskDayTitle">{formatarData(dia)}</h3>
+                        {agendasPorDia[dia].map((agenda) => {
+                            const completed = agenda.status === "concluida";
+                            return (
+                                <div
+                                    className="Task"
+                                    key={agenda.id_agenda}
+                                    style={{ textDecoration: completed ? 'line-through' : 'none' }}
                                 >
-                                    <FaTrash />
-                                </button>
-                            </div>
-                        );
-                    })}
-                </section>
-            ))}
-            {error && <p role="alert">{error}</p>}
-            <button className="Confirm" onClick={() => setProceed(!proceed)}>
-                {proceed ? "Sair do modo de edição" : "Modificar"}
-            </button>
+                                    <input
+                                        type="checkbox"
+                                        checked={completed}
+                                        disabled={!proceed}
+                                        onChange={() => alternarStatus(agenda)}
+                                        aria-label={`Marcar ${agenda.titulo} como ${completed ? "pendente" : "concluída"}`}
+                                    />
+                                    {completed ? <LuCheckCheck /> : <LuCircleAlert />}
+                                    <div className="TaskTitle">
+                                        <span>{agenda.titulo}</span>
+                                        <small className="TaskTime">{formatarHorario(agenda)}</small>
+                                    </div>
+                                    <button
+                                        className="TaskDelete"
+                                        type="button"
+                                        disabled={!proceed}
+                                        aria-label={`Excluir ${agenda.titulo}`}
+                                        onClick={() => excluir(agenda)}
+                                    >
+                                        <FaTrash />
+                                    </button>
+                                </div>
+                            );
+                        })}
+                    </section>
+                ))}
+            </div>
+            <div className="TaskFooter">
+                {error && <p role="alert">{error}</p>}
+                <button className="Confirm" onClick={() => setProceed(!proceed)}>
+                    {proceed ? "Sair do modo de edição" : "Modificar"}
+                </button>
+            </div>
         </div>
     );
 }

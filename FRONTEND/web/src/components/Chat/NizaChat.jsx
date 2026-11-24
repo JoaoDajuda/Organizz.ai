@@ -60,7 +60,8 @@ export default function NizaChat() {
     const [draft, setDraft] = useState("")
     const [generating, setGenerating] = useState(false)
     const socketRef = useRef(null)
-    const bottomRef = useRef(null)
+    const messagesRef = useRef(null)
+    const shouldAutoScroll = useRef(true)
 
     useEffect(() => {
         if (!open) return undefined
@@ -172,8 +173,17 @@ export default function NizaChat() {
     }, [open, view])
 
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" })
+        const container = messagesRef.current
+        if (!container || !shouldAutoScroll.current) return
+        container.scrollTop = container.scrollHeight
     }, [messages, view])
+
+    useEffect(() => {
+        if (view !== "chat") return
+        shouldAutoScroll.current = true
+        const container = messagesRef.current
+        if (container) container.scrollTop = container.scrollHeight
+    }, [view])
 
     useEffect(() => {
         if (!open) return undefined
@@ -244,7 +254,14 @@ export default function NizaChat() {
 
         setMessages((current) => [...current, userMessage])
         setDraft("")
+        shouldAutoScroll.current = true
         socket.send(JSON.stringify({ type: "chat", request_id: requestId, input }))
+    }
+
+    function acompanharRolagem(event) {
+        const container = event.currentTarget
+        const distanciaDoFim = container.scrollHeight - container.scrollTop - container.clientHeight
+        shouldAutoScroll.current = distanciaDoFim < 80
     }
 
     function editarPerfil() {
@@ -402,7 +419,13 @@ export default function NizaChat() {
                                 <button type="button" className="niza-chat__edit" onClick={editarPerfil}>Editar perfil</button>
                             </div>
                             {connectionError && <p className="niza-chat__error" role="alert">{connectionError}</p>}
-                            <div className="niza-chat__messages" aria-live="polite" aria-relevant="additions text">
+                            <div
+                                className="niza-chat__messages"
+                                ref={messagesRef}
+                                onScroll={acompanharRolagem}
+                                aria-live="polite"
+                                aria-relevant="additions text"
+                            >
                                 {messages.length === 0 && (
                                     <div className="niza-chat__welcome">
                                         <p>Oi! Já conheço suas prioridades financeiras.</p>
@@ -417,7 +440,6 @@ export default function NizaChat() {
                                         {message.content || (message.sender === "bot" && generating ? "..." : "")}
                                     </div>
                                 ))}
-                                <div ref={bottomRef} />
                             </div>
                             <form className="niza-chat__composer" onSubmit={enviarMensagem}>
                                 <label className="niza-chat__sr-only" htmlFor="niza-chat-input">Mensagem para a Niza</label>
